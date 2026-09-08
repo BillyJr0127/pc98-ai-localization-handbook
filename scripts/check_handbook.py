@@ -10,11 +10,11 @@ from pathlib import Path
 from build_handbook import ROOT, render
 
 FILES = {
-    '.gitignore', 'LICENSE', 'README.md', 'AI-HANDBOOK.md', 'AI-GUIDE.md',
-    'WORKFLOW.md', 'AUDIO.md', 'VALIDATION.md', 'LESSONS.md', 'RIGHTS.md', 'SOURCES.md',
+    '.gitignore', '.gitattributes', 'LICENSE', 'README.md', 'AI-HANDBOOK.md', 'AI-GUIDE.md',
+    'WORKFLOW.md', 'AUDIO.md', 'VALIDATION.md', 'LESSONS.md', 'FOLLOW-UP.md', 'RIGHTS.md', 'SOURCES.md', 'CHANGELOG.md',
     'templates/PROJECT.json', 'templates/AUDIO-PROFILE.json', 'templates/STATUS.md',
-    'templates/ISSUE.json', 'examples/text.json', 'examples/audio.json',
-    'scripts/inspect_inputs.py', 'scripts/check_examples.py', 'scripts/build_handbook.py',
+    'templates/ISSUE.json', 'templates/RELEASE.json', 'examples/text.json', 'examples/audio.json', 'examples/binary.json',
+    'scripts/inspect_inputs.py', 'scripts/check_examples.py', 'scripts/check_binary_examples.py', 'scripts/build_handbook.py',
     'scripts/check_handbook.py', 'scripts/build_bundle.py',
 }
 
@@ -54,6 +54,7 @@ def main():
                 assert resolved.is_relative_to(ROOT.resolve()) and resolved.is_file(), (name, target)
     assert (ROOT/'AI-HANDBOOK.md').read_text(encoding='utf-8') == render(), 'Rebuild the single-file handbook'
     run(ROOT/'scripts/check_examples.py')
+    run(ROOT/'scripts/check_binary_examples.py')
     # Self-created bytes only; verify reading, hash accuracy and both overwrite guards.
     with tempfile.TemporaryDirectory(prefix='pc98-handbook-check-') as folder:
         temp = Path(folder)

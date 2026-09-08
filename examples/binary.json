@@ -1,0 +1,31 @@
+{
+  "origin": "Self-created byte sequences and display nodes; no extracted game data.",
+  "scope": "A deliberately restricted two-byte text field, not a full Shift-JIS decoder or game format.",
+  "profile": {"lead_min": 129, "lead_max": 152, "terminator": 125},
+  "valid_field_hex": "81 7d 82 40 7d",
+  "expected_end_offset": 4,
+  "expected_naive_end_offset": 1,
+  "invalid_fields": [
+    {"id": "truncated_pair", "hex": "81"},
+    {"id": "missing_terminator", "hex": "81 7d"},
+    {"id": "invalid_trail", "hex": "81 7f 7d"},
+    {"id": "outside_vm_leads", "hex": "99 40 7d"},
+    {"id": "standard_lead_outside_vm", "hex": "e0 40 7d"},
+    {"id": "unsupported_ascii", "hex": "41 7d"}
+  ],
+  "original_nodes": [
+    {"op": "text", "value": "這是自製教學短句。下一行保留同一頁。"},
+    {"op": "wait", "ticks": 17},
+    {"op": "page", "index": 2},
+    {"op": "sound", "action": "stop"},
+    {"op": "text", "value": "這一頁保持安靜。"}
+  ],
+  "reflowed_nodes": [
+    {"op": "text", "value": "這是自製教學短句。"},
+    {"op": "text", "value": "下一行保留同一頁。"},
+    {"op": "wait", "ticks": 17},
+    {"op": "page", "index": 2},
+    {"op": "sound", "action": "stop"},
+    {"op": "text", "value": "這一頁保持安靜。"}
+  ]
+}

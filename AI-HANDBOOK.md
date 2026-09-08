@@ -1,6 +1,6 @@
 # 給 AI 的 PC-98 中文化與音訊研究手冊：單檔版
 
-版本 1.0 · 2026-09-08。由分章文件產生。先讀 AI 工作指引，再依使用者目標開始；不要假設任何 FDI 都能自動轉換。只分析使用者實際提供且可用的資料。本檔包含全部章節、模板、自製範例與兩個入門腳本。
+版本 1.1 · 2026-09-08。由分章文件產生。先讀 AI 工作指引，再依使用者目標開始；不要假設任何 FDI 都能自動轉換。只分析使用者實際提供且可用的資料。本檔包含全部章節、模板、自製範例與三個入門腳本。
 
 使用者請提供：輸入路徑、來源與使用範圍、目標平台、目標語言、希望保留的音源模式。若工具無法讀本機檔案，先說明限制，不聲稱已執行。
 
@@ -40,6 +40,7 @@
 - 先辨識、再選解法。副檔名 `.M` 不保證某種樂譜，`.FDI` 不保證固定表頭，IBM DOS 與 PC-98 的 I/O 位址也不能互換套用。
 - 不以加速所有 cycles、跳過場景、縮短等待、濾除高頻或刪減聲部來掩蓋問題。實驗若更改條件，清楚標為診斷，不作正式驗收。
 - 本個案的晶片、取樣率、增益、緩衝大小、腳本指令及時鐘值不是通用常數。每個專案重新量測。
+- 同系列續作仍需重新辨識檔案系統、模組、文字可用字碼與驅動版本。重用前記錄來源與差異，不直接執行會寫回舊專案的工具；詳見 FOLLOW-UP.md。
 - 不刪劇情、圖片、音效或自動／手動翻頁規則來減少工作。必要的設計變更依使用者要求，並列入差異紀錄。
 - 音源可有多條同時生效的路徑；更換 MIDI 播放器不能修復仍由 FM 產生的音效。
 - 不把診斷工具或自己的螢幕／錄音產生器當成唯一參考。修改程式與驗證程式可能犯相同錯誤。
@@ -54,6 +55,8 @@
 每次階段結束或上下文將滿時，更新 STATUS：輸入雜湊、目標、已通過的關卡、目前程式版本、已證實的音源模式、失敗的方案、仍未測的場景、測試命令、下一個有界實驗。保存可重跑的證據路徑，不依賴「上次好像測過」。
 
 另一個 AI 接手時，先讀狀態與最近證據，確認當前檔案版本；不要重新執行已失敗且無新條件的方案，也不要把使用者滿意回饋升級成全流程驗收。
+
+若由其他任務製作最後封裝，收到其完成交接後才凍結發布內容。用 RELEASE 模板記錄正常版、診斷版、可選解鎖與宿主工具各自的狀態。原本就全開的選單、原作返回行為、人工新增的完成畫面，要分開標註；測試被中止就是未完成。
 
 ## 完成措辭
 
@@ -98,11 +101,15 @@
 
 本包的 `examples/text.json` 可先練習保留姓名變數與命令，不能取代真實引擎的格式分析。
 
+反編譯工具的預設融合／正規化選項也可能刪去呼叫，需以未修改往返找出原因。重建後另比對扣除文字的控制結構。終止符可能出現在雙位元組字元內，不能直接以第一個匹配位元組切字串；自製例子見 `examples/binary.json`。
+
 ## G4：一個最小中文畫面
 
 先選一段短對話、一個含數字的狀態欄與一個選單。建立固定 ID、原文、譯文、說話者、場景、長度限制、控制符及審閱狀態。保持數字、變數、格式符與選項對應，不能把分支內容合成一段流暢中文。
 
 使用有相應授權的字型。若原引擎不支援 Big5 或 Unicode，可以設計內部字碼表，但它必須是無衝突映射；不能宣稱該自訂映射就是標準 Big5。記錄缺字策略、每字寬度、行高、基線、透明／不透明背景、全形標點及半形數字的規則。
+
+候選字碼還要通過原 VM 的文字／命令分類器；標準編碼能表示不代表引擎允許。重新計算變長文字指標，驗證固定欄位和總緩衝區容量，並逐位元保留相鄰能力值與資產名稱。只對顯示字串套用全形等正規化，不改語法或數值。
 
 測單字、滿行、跨頁、不同長度的人名、零與最大位數、正負號，以及中英日混排。所有新增字都要能顯示；短譯文也可能因擦除範圍錯誤留下黑塊。完整性與美觀分開驗證。測試過關後才擴大翻譯，避免全文建立在錯誤編碼模型上。
 
@@ -129,6 +136,8 @@
 先在新的目錄重建，確認沒有隱性依賴開發者的磁碟、字型、編譯器或過去提取物。記錄來源版本與輸出雜湊。未知磁片版本應清楚拒絕套用，不自行繞過驗證。
 
 使用者目前的存檔必須保留。乾淨包用經驗證的初始化流程，不以全零檔案取代引擎必需的結構。即時快照可能包含舊程式、音源、佇列與音效卡狀態；更新後測試須重啟並讀相容的遊戲存檔。
+
+「空白」的正確表示要由格式與實際載入證明：有的引擎需要有效結構，有的允許固定長度零值資料表示空槽。首次啟動初始化必須只補缺檔，不能覆寫之後的玩家進度。原本全部可選的音樂欣賞與額外回憶解鎖分開驗證。將可選解鎖、診斷入口與正式包分離；各包從解壓出的新目錄測試，並比對共同核心，詳見 FOLLOW-UP.md。
 
 驗收報告列出：已驗證的機器與音源、場景覆蓋、全文審閱範圍、差異、未解事項、存檔政策、可重跑步驟。使用者對目前聲音滿意是有用的驗收記錄，不替代全曲／實機或其他遊戲的證據。公開是另一項需確認授權與內容的工作，不由技術通過自動觸發。
 
@@ -267,6 +276,16 @@ IBM DOS 目標可以研究對應 MPU-401 介面輸出；先判斷遊戲需要 in
 
 不同核心及實機輸出不應以逐樣本完全相同為通用門檻；先對齊場景、速度、音高、聲部與合理的響度條件，再分析差異。所有未達成或未測模式寫入 profile。詳細量測與判斷見 VALIDATION。
 
+## 10. 續作必須重新確認的項目
+
+續作即使仍用同名驅動及相同晶片，也要核對版本、初始化、命令入口、計時、共享聲部、停止與阻塞淡出。後續案例保留 PLAY3 2.00、YM2203／ymfm 與 SB16，但沒有直接套首作的額外 voice reset。淡出結束還需考慮已排事件與 DMA 排空，不能只看目前音量。
+
+記錄事件比對的實際長度：每曲若只跑固定次數的中斷，就不能宣稱全曲循環已測。原驅動與轉接驅動共用一個硬體模型，不等於獨立實機參考；未校正時鐘與未測模式保留原狀。
+
+後續診斷的頻繁 DPMI yield 曾讓零 underrun 的播放比例降至約 0.41；這與首作在特定等待使用 HLT 的情況不同。修正必須依負載與排程證據選擇。詳見 FOLLOW-UP.md。
+
+網路影片若另加配樂，不能用來否定原作靜音；核對影片疊字／作者註記與原始場景指令。若需要錄影回報問題，記錄錄音範圍與實際接收器，避免程序擷取漏掉另一個程序或外接 MIDI 模組的聲音。
+
 
 ---
 
@@ -336,12 +355,30 @@ IBM DOS 目標可以研究對應 MPU-401 介面輸出；先判斷遊戲需要 in
 
 本包 `scripts/check_examples.py` 示範零 underrun 的慢播仍需失敗、MIDI 漏 Note Off 檢查及文字佔位符檢查。它是極小的自製教材，不是完整 MIDI 驗證器，更不能代替這張矩陣。
 
+## 跨代案例新增的回歸條件
+
+| 假說 | 能支持結論的檢查 | 不能省略的限制 |
+|---|---|---|
+| 解壓重定位正確 | 兩個載入基址正規化後一致 | 未驗證整個遊戲或 DOS 硬體相容 |
+| 主模組移植完整 | 盤點後續載入模組，檢查迷宮、圖示、反白及換頁 | 標題圖通過不能代表模組通過 |
+| 文字只改內容 | 原文與譯文控制結構、譯後二進位往返一致 | 不因換行就忽略等待／換頁／音樂 |
+| 字串終止正確 | 尾碼等於終止符、截斷字元、不合法尾碼、欄位邊界 | 通用解碼器不替代 VM 可用字碼檢查 |
+| 結束後自動重播 | 分別追蹤不輸入、再確認與按住確認，數首段／末段／選單入口 | 可能是返回預設選项後重新選中 |
+| 新包無玩家狀態 | 檢查初始化資料、正常預設開放項目、可選解鎖與再次啟動 | 存檔不存在或全零本身不是證據 |
+| 影片可用 | 解碼首幀、靜止畫面、聲音、尺寸、收尾與改尺寸分段 | 視窗通過不能替代全螢幕；被中止不算通過 |
+
+測試加速時要列出仍保留的原 VM 行為，以及被替換的文字、等待、入口或能力值。保持檢查對象和診斷產物可區分，不把新增完成畫面寫成修復原作的必然錯誤。
+
+`scripts/check_binary_examples.py` 的已知錯誤比較會證明直接搜尋終止符的結果不同，並檢出重排時遺失等待、換頁或音樂操作。這些是自製例子的測試，不會開啟或修改任何遊戲。
+
 
 ---
 
-# 從一次實驗提煉的方法
+# 首次實驗提煉的方法
 
 這裡只記錄方法、現象與概括結果，不附商業遊戲內容、驅動、完整劇本或專屬修補位址。數字來自本次本機研究紀錄；原始私有資料未包含在教學包，因此外部讀者不能只靠本包獨立重跑該個案。可用自製資料重建相同類型的故障。
+
+本章保留首個案例的範圍；第二個案例與不能直接沿用的修正，見 FOLLOW-UP.md。兩個案例的通過項目分開記錄。
 
 ## 1. 開場靜音可能是原作行為
 
@@ -396,6 +433,136 @@ IBM DOS 目標可以研究對應 MPU-401 介面輸出；先判斷遊戲需要 in
 ## 9. 結果的正確描述
 
 使用者最終對本次版本的聲音與操作表示滿意，這是本次實驗的重要成果。它不證明與實體 PC-9801 完全一致；本手冊也沒有用該個案驗證 MIDI 模組、其他遊戲或任意硬體。下一位 AI 的任務是沿用證據方法，不是沿用「已經完美」的結論。
+
+
+---
+
+# 從首作到續作：重新驗證可重用的部分
+
+本章整理第二個本機移植案例。兩個案例最後都採原演奏驅動、YM2203 軟體合成與 DOS 下的 SB16 輸出，但磁片配置、引擎、指令及等待行為不能直接沿用。本章提供方法與概括證據，不提供商業遊戲的資料、驅動、翻譯、專屬修補位址或轉換器。
+
+## 1. 先隔離新專案，再談共用工具
+
+續作使用四片同副檔名的映像，實際卻是沒有額外容器表頭、使用自訂連續配置目錄的原始磁區資料；首作的 FAT 假設不適用。檔案大小相近、同公司或同系列，都不能證明檔案系統相同。
+
+先從簽章、目錄項規律、可解釋的長度與載入程式交叉驗證。檢查檔名正規化、重複名稱、磁區內偏移、資料範圍及重疊，再將每片的同名檔分開提取。後續案例的四片來源雜湊保持不變，640 個檔案完成提取與檢查；這只是該版本的結果，不是通用 FDI 規格。
+
+共用編譯器可以唯讀使用；舊建置腳本則先檢查輸出根目錄，複製到新專案後才改寫。記錄來源檔雜湊、複製檔雜湊與修改原因，避免一個工具的固定路徑覆蓋前作成品或玩家存檔。反編譯輸出、診斷版本和正式交付各自保存。
+
+## 2. 能解壓不等於能執行，標題正常不等於所有模組正常
+
+壓縮執行檔可先在受限 CPU 模型中只執行已辨識的解壓段，限制指令數、記憶體範圍與可用中斷，記錄重定位。以兩個載入基址執行，正規化重定位後比較結果，能發現把載入位址誤當固定資料的錯誤；仍不能證明 DOS 相容性。
+
+移植邊界不只在主引擎。續作的迷宮、道具圖示及選取反白另外使用模組，還有圖形清除、GRCG、顯示頁切換與資料複製路徑。主引擎標題正常後，仍需盤點其後載入的執行碼。保留地圖、移動規則與幾何，逐一替換有證據的硬體操作。
+
+私人軟體服務中斷也可能與 EMS、RTC、DPMI 或其他已安裝服務衝突。先盤點、保存並恢復原向量，針對目標環境選擇可用範圍；本章不提供一組可對任何遊戲硬套的向量。
+
+後續案例對原 PC-98 模組與 IBM DOS 模組比對四個圖形平面，迷宮包含 12 組位置／方向變化。這支持指定狀態下的繪圖一致，不證明整個遊戲通關。檢查實際色盤、可見內容及資料長度，避免兩邊都沒有畫出目標仍得到「零差異」。
+
+隔離探針也需要正確初始化：案例曾把圖片載入預設劇本緩衝區，覆寫後續指令；另一種黑圖來自沒有先載入原入口使用的牆面圖集。先核對緩衝區與資產前置條件，再判定是否為繪圖器錯誤。缺檔與提早退出應傳回失敗，並以真正抵達的畫面／執行節點驗證。
+
+## 3. 反編譯器的便利選項也可能改變控制流程
+
+後續案例初次未修改往返只有 4／55 份逐位元相同；原因是工具的主角名稱融合設定移除了部分呼叫。關閉該正規化後，55／55 份才逐位元相同。這不是「任何正規化都錯」，而是不能在差異未解釋前開始全文翻譯。
+
+保存工具版本、選用引擎、字元集與額外選項。先用未修改劇本找出差異；翻譯後再做兩種比較：
+
+- **位元組往返**：譯後二進位反編譯、重編譯是否完全一致。
+- **控制結構**：扣除顯示文字後，原文與譯文的呼叫、分支、旗標、參數、等待、音樂及選單結構是否一致。
+
+不要把「可解析」「有結束碼」或「反編譯後看起來相同」當成完整證據。重排文字時，只能正規化連續的純文字節點；中間的換頁、等待、顏色或音樂操作仍是不可吞掉的邊界。
+
+## 4. 標準編碼可解碼，不代表引擎會當成文字
+
+後續案例的文字分類器只接受 `81h～98h` 作為雙位元組文字的開頭，其他部分原本可能是標準編碼的字碼，卻被此 VM 當成命令。若用通用 Shift-JIS 函式分配中文字槽位，可能得到「字型有字、遊戲卻亂跑」的結果。
+
+內部字碼表要同時滿足標準編碼可表示、引擎文字分類器允許、未占用原文槽位、映射不重複及字型確實有字形。這是自訂字碼映射，不是把遊戲改成 Big5。候選槽用完時明確失敗，不循環覆寫前面的字。
+
+半形標點在某些 VM 內也會成為命令。案例對**已辨識的顯示字串**做全形正規化；不能對劇本語法、路徑、變數與數值欄位做全域全形化。原作命名字表是否保留，要另外列出，不能與翻譯字型覆蓋率混算。
+
+字型檢查至少包含 cmap 實際字形覆蓋、渲染後沒有缺字、字框位置及授權範圍。能在本機產生點陣字型，不等於可公開散布該字型；本教材不附個案使用的字型。見 RIGHTS.md。
+
+## 5. `7Dh` 可能是字的一半
+
+某資料欄位使用單獨的 `7Dh` 作文字結尾，但雙位元組字元的尾位元組也可能等於 `7Dh`。直接搜尋第一個 `7Dh`，會截斷正常字串，接著造成名稱、後續文字指標與資料長度誤判。
+
+解析器必須先辨識一個完整字元，再檢查下一個獨立標記；在讀尾位元組前檢查欄位邊界，也要拒絕不合法尾位元組。重建記錄時重新計算文字指標，另外逐位元確認能力數值、資產名稱與其他非文字欄位不變。文字變短也不能跳過固定欄位與總緩衝區限制。
+
+`examples/binary.json` 與 `scripts/check_binary_examples.py` 用自製位元組示範這個錯誤，以及禁止把重排文字變成刪除等待。例子的受限字碼規則是教學用設定，不是完整 Shift-JIS 解碼器或遊戲解析器。[標準 Shift_JIS 解碼流程](https://encoding.spec.whatwg.org/#shift_jis-decoder)可用來核對字元邊界；引擎接受範圍仍需另外研究。
+
+## 6. 翻譯覆蓋、語意審閱與畫面排版分開算
+
+後續案例找到 7,027 種文字、8,882 處引用，涵蓋劇本與怪物資料。離線模型先產生初稿，再按上下文修正人物名稱與戰鬥拼接語法；「每個 ID 都有譯文」與「每句都經人工潤校」是不同結果。
+
+翻譯工作表保留文字 ID、出現位置、角色、上下句與審閱狀態。同一句在不同場景可能要有位置限定的覆寫；套用覆寫前核對原文未變，避免來源更新後套到別句。模型只翻譯指定欄位，不能把上下文一起輸出；拒絕缺 ID、多 ID、空字串或不合法 JSON，保存失敗紀錄並做有界重試。斷點續作時採原子寫入，已審閱文字與草稿分開。
+
+重點不是模型名稱，而是上下文、格式約束與回歸。角色名、攻擊動詞、受傷對象與數值可能由不同片段組合；逐片段通順不代表組合後語法或方向正確。要以自製的「甲對乙造成數值效果」測主詞、受詞與數字位置，再核對實際原場景。
+
+九頁開場文字的修正採依句意分行、逐行置中，保留原有九頁邊界與等待／音樂指令。使用原渲染器與最終字型逐頁產圖，檢查行數、實際寬度、標點是否落在行首、字框與上下位置；純文字編輯器的置中不能取代這一步。靜態逐頁診斷省略選單與等待，因此只證明排版，還要用正常入口驗證演出時間。
+
+離線翻譯模型是製作工具；若成品使用已生成的譯文，模型與推論服務不應成為遊戲執行時依賴。
+
+## 7. 保留同一種音源，也要重新研究驅動
+
+後續案例重新確認採 PLAY3 2.00 演奏驅動與 YM2203，保留 68 份原曲譜及原音效資料，經 ymfm 即時合成後送往 SB16。這個結論來自資料、驅動與原參考，不能由首作也用 YM2203 推得。
+
+新驅動的呼叫邊界、暫存器寫入、Timer、停止與淡出需重新核對。首作處理殘留高頻的額外 voice reset **沒有直接啟用在續作**；存在同名函式不代表執行路徑真的呼叫它。複製程式時要核對實際呼叫與產物，不能靠註解判斷行為。
+
+淡出還牽涉呼叫者是否等待，以及最後音訊是否已經送完 DMA。只把音量降為零可能讓遊戲提早進下一場。案例量測指定 PC-98 參考下的淡出時間，再在後端保留等待與緩衝排空；其時間值、輸出取樣率、晶片時鐘與增益不是其他遊戲的設定建議。
+
+已比對的範圍是 68 份曲譜各 500 次 Timer B 中斷的原驅動／轉接事件，以及另外 11 組音效事件；獨立 PC-98 參考比對了一段有序事件前綴。這不能寫成所有曲目已完整循環、全曲聽感一致或與實體板逐樣本相同。參考時鐘校正與未測快照也不能因事件通過而自動標為完成。
+
+## 8. 「讓出 CPU」也可能把測試拖慢
+
+續作的獨立音訊診斷曾在等待迴圈頻繁呼叫 DPMI yield，約 12 秒音訊用了約 29.6 秒牆鐘時間，比例約 0.41，underrun 卻仍為零。移除該診斷程式的頻繁 yield 後恢復接近即時；後續 12 秒量測比例約 1.0004。
+
+這不推翻首作在特定文字等待使用 HLT 的修正。兩者的回呼、計時、IRQ 與工作負載不同。「一律睡眠」和「一律忙等」都不是答案：先區分客體時間與外部時間，找出阻塞哪一層，再在實際程式驗證。
+
+該次診斷保留了失敗量測與舊程式雜湊，沒有保留被取代的舊執行檔，因此不能宣稱這份教材能重跑當時的失敗。後續實驗應先保存失敗版本及環境，再建立修正版；只有一個雜湊不能重建已遺失的產物。
+
+## 9. 網路影片、原作靜音與原本開放的選單
+
+後續案例的開場城市歷史段應保留原作無 BGM 行為。比對網路影片前，核對作者是否另外配樂、影片版本、設定與剪輯；另外加入的音樂不能拿來判定原作缺音。音源支援列表和可觀察的 start／stop／fade 指令，比「影片聽起來有音樂」更能定位原因。
+
+私人研究交接記錄了[參考影片約 38～40 秒的作者疊字](https://www.youtube.com/watch?v=7JtNR_tht-o&t=38s)：`♪ Gas Cloud 68K ♪` 與 `'cause the 1st minute is mute :(`。這是影片畫面上的註記，不是說明欄。本次手冊編輯未能重新取得該片段，故將其列為**交接觀察、未獨立重核**；原作靜音結論另有本機原始劇本在城市史前淡出、其間沒有重新載曲／啟樂、後續場景才開始音樂的證據，不依賴這段影片單獨成立。
+
+音樂欣賞在該原版本來全部可選；不能看到全開就推論玩家已通關或成品混入解鎖進度。音樂欣賞、回憶解鎖、主線存檔與命名資料要分別查旗標及初始化路徑。
+
+## 10. 回到預設選項後重播，不是已證明的無限迴圈
+
+回憶模式會播放 29 段，結束回到預設第一項；此時額外按 Enter 又選中同一項，便重新播放。若只看首段畫面再次出現，很容易把選單重新觸發誤報為程式無限迴圈。
+
+案例以原 VM 的隔離加速測試追蹤首段、末段與選單重新初始化：額外確認鍵讓前後完整序列各出現兩次。檢查副本另增完成畫面，先停留、再確認回主選單，防止檢查者誤啟動；這是副本的操作改善，不是原作本來有的畫面。
+
+測試保留分支、旗標、圖像／動畫載入與選單輸入，但抑制文字、縮短等待；它支持控制流程結論，**不是 29 段逐段人工內容校對，也不是完整手動遊玩**。沒有按鍵、只按一次、結束後再按一次及持續按住，要分別重現，不能以自動連打代替所有操作。
+
+最終正式包保持原有解鎖条件與返回流程；可選的完整回憶入口和完成畫面一起放在包外，使用者自行選用。這是劇本條件的變體，沒有靠預填通關存檔解鎖；但原回憶劇本仍可能在播放途中設定自己的完成旗標，不能因此聲稱「任何旗標都不變」。
+
+## 11. 宿主錄影是另一個需驗證的功能
+
+首作的 Windows 助手以 F9 開始、F10 完成 MP4，使用 ScreenRecorderLib 與實際顯示區域；它與 DOS 內音源合成、模擬器原生錄影及真正 DOS 執行是不同層。初期 Window Graphics Capture 在特定 Direct3D 靜止畫面錄到開頭全黑，改用螢幕擷取並裁切遊戲區域後才通過。[ScreenRecorderLib 原作者專案](https://github.com/sskodje/ScreenRecorderLib)說明其 Windows 編碼介面；特定黑畫面是本機觀察，不能推成所有顯示卡的必然問題。
+
+跨專案重用時，改名之外也要重驗前景 PID、DPI、實際 client 尺寸、快捷鍵按下／放開、重複按鍵、改尺寸分段及非同步完成 MP4。螢幕矩形上的通知可能入鏡。目標 60 FPS 不等於量測每段都達到 60 FPS。
+
+程序音訊擷取只包含其指定的程序範圍；外部 MIDI 接收器或另一個程序的音訊未必被錄入。不能把無聲影片直接歸因於原曲。需核對實際音訊路由。[Microsoft 程序音訊擷取範例](https://learn.microsoft.com/en-us/samples/microsoft/windows-classic-samples/applicationloopbackaudio-sample/)
+
+首作測過視窗與 4K 全螢幕；續作完成視窗 MP4 實測，但全螢幕測試被中止、尚未完成。不能把前作通過當成續作已驗收。
+
+## 12. 封裝完成與研究完成各有證據
+
+乾淨成品、含模擬器成品、回憶檢查副本與額外解鎖工具有不同用途。應由明確清單建立包，驗證新遊戲／存檔初始化及原版預設旗標，不從開發資料夾整包壓縮，也不把「沒有存檔檔名」當成沒有玩家狀態。
+
+正式封裝前，以最後交接的版本與證據更新 `templates/RELEASE.json`：記錄每個包的角色、可執行環境、保留／排除的玩家狀態、原作預設開放項目、可選解鎖與正常流程差異。各包解壓後重讀校驗；不同包的共同遊戲核心應一致，差異僅限宣告的宿主元件及說明。
+
+後續封裝曾把整份初始化檔設為全零：原 VM 雖然回報正常退出，卻在載入入口劇本後就結束，連字型都沒載入。原因是該檔除了進度旗標，還含腳本名稱、VM 變數／指標及固定資料。正確方向是用原初始化與存檔流程產生有效模板，清除已辨識的進度與一般變數、重設預設姓名，同時保留引擎必需資料。這種模板與「測試者玩過的存檔」要用欄位來源與實際新遊戲流程區分。
+
+首次啟動只在缺檔時建立空槽；再次啟動要證明既有玩家存檔完全不變。驗收不能只看退出碼：還需確認真正抵達主選單、命名或原作的新遊戲節點，完成存入／改動／讀回的資料驗證。
+
+本次最終兩包以白名單排除所有玩家存檔，另附有效初始化模板，由 DOS 啟動批次檔只建立缺少的槽。模板前 512 位元組的 1,024 個進度旗標全為零，後段保留經原 VM 初始化的必要資料；這組大小與欄位配置只屬本案例，不能套用到其他遊戲。
+
+最終報告通過解壓 CRC／逐檔核對、兩包共同遊戲內容一致、正式執行檔首次啟動及第二次啟動保留測試槽。命名到開場、未解鎖回憶不載入場景則使用診斷用戶端與按鍵測試，不能寫成正式版全程人工操作。封裝檢查也沒有重跑 DOSBox-X 錄影介面；續作的視窗錄影證據來自先前測試。這些結果應各自記錄，避免把「整包通過」擴大成所有功能都重測。
+
+公開教學只包含這些方法與自製例子，不包含本機遊戲 ZIP 或解鎖資料。乾淨包不等於可公開發行。未完成的全程正常通關、逐句人工潤校、全曲聽音、實機比對及續作全螢幕錄影，必須保留為未完成，而不是在發布教學時一併宣稱完成。
 
 
 ---
@@ -467,9 +634,38 @@ IBM DOS 目標可以研究對應 MPU-401 介面輸出；先判斷遊戲需要 in
 
 ## 本機研究經驗
 
-LESSONS 的經驗來自一次實際移植、原驅動事件比對、模擬器參考、即時音訊量測與使用者回饋。這些內容屬本教材的方法整理；原始檔案與私人驗證紀錄不在本包內。不能把原實驗中的特定數值、晶片或腳本處理方式當成其他遊戲的既定結論。
+LESSONS 記錄首個案例；FOLLOW-UP 記錄續作案例。來源包括本機原驅動事件比對、模擬器參考、即時音訊量測、文字與模組回歸以及操作回報。編輯本章時只讀檢查程式與既有證據，沒有重新建置或執行私有遊戲。原始檔案、反編譯結果、畫面及私人驗證紀錄不在本包內，外部讀者不能只靠教材重跑這兩個案例。不能把其中的特定數值、晶片或腳本處理方式當成其他遊戲的既定結論。
 
 MIDI／OPNA 分支是供後續研究的設計與驗證方向，沒有聲稱在該個案中已實作完成。本包的合成範例通過，只表示範例的預期判斷成立。
+
+## 字元邊界與宿主錄影
+
+- [WHATWG：Shift_JIS 解碼器](https://encoding.spec.whatwg.org/#shift_jis-decoder)：核對字元邊界與非法序列；本教材的受限範例不是完整標準實作，VM 指令分類仍需另查。
+- [ScreenRecorderLib 原作者專案](https://github.com/sskodje/ScreenRecorderLib)：Windows 錄影與 Media Foundation 編碼介面。首作和續作的具體測試結果仍以各自本機紀錄為準，沒有附第三方 DLL。
+- [Microsoft：Application loopback audio capture](https://learn.microsoft.com/en-us/samples/microsoft/windows-classic-samples/applicationloopbackaudio-sample/)：程序音訊擷取範圍及作業系統要求。其他程序／外接模組未必落在錄音範圍內。
+
+## 網路影片的觀察限制
+
+[使用者提供的參考影片，約 38 秒](https://www.youtube.com/watch?v=7JtNR_tht-o&t=38s)：私人研究交接記錄作者在畫面疊字說明另加配樂；本次編輯未重新取得片段，這筆證據僅標為交接觀察，不列作獨立重核。原作是否靜音另以本機原始劇本與音樂指令查核。不得把作者配樂、版本不同或剪輯過的影片當成原音唯一標準。
+
+
+---
+
+# 版本紀錄
+
+## 1.1 · 2026-09-08
+
+- 加入首作到續作的重新驗證經驗：磁片格式、模組、中斷、反編譯選項與控制結構。
+- 補充 VM 受限字碼、雙位元組尾碼與終止符、翻譯拼接、字型與九頁開場排版。
+- 補充原驅動版本、淡出等待、不可盲套音源 reset、DPMI yield 慢播及參考影片後製的辨識。
+- 區分回憶播放結束後重新確認、診斷副本完成畫面與真正的迴圈故障。
+- 加入自製二進位／重排文字範例及發布交接模板，區分 DOS、宿主錄影、乾淨封裝與解鎖狀態。
+- 補入最終封裝證據：全零存檔會破壞必要初始化、有效模板只建立缺槽、兩包共用內容核對與可選回憶變體分離。
+- 保留未完成範圍：正常全程通關、逐句人工潤校、全曲／實機聽感，以及續作全螢幕錄影。
+
+## 1.0 · 2026-09-08
+
+- 首次發布 AI 工作流程、音源分支、六層音訊驗證、權利範圍、模板與自製入門範例。
 
 
 ---
@@ -571,6 +767,18 @@ G0～G7：待填
 一個有界實驗、預計產物、成功／失敗判準與回退方式：待填
 
 需要使用者補充的真正缺失：待填
+
+## 最後封裝交接
+
+是否已收到最後交接、當前成品版本與驗證報告：待填
+
+正常版／檢查副本／可選解鎖的行為差異：待填
+
+原本全開的功能與玩家進度是否分別核對：待填
+
+視窗／全螢幕錄影及正常全程通關各自的驗證狀態：待填
+
+將私有封裝詳細紀錄填入 RELEASE.json；不要把檔名清單或授權未明的產物直接帶入公開教材。
 ```
 
 
@@ -590,6 +798,46 @@ G0～G7：待填
   "change": null,
   "regression_tests": [],
   "result": "not-tested"
+}
+```
+
+
+## `templates/RELEASE.json`
+
+```json
+{
+  "schema_version": 1,
+  "scope": "Copy into a private project. A clean game package does not imply publication permission.",
+  "build_id": "unknown",
+  "last_handoff_received": false,
+  "input_hash_manifest": "unknown",
+  "packages": [
+    {"role": "dos-only", "status": "not-tested", "sha256": "unknown", "allowlist": [], "external_runtime_dependencies": []},
+    {"role": "with-emulator", "status": "not-tested", "sha256": "unknown", "allowlist": [], "external_runtime_dependencies": []}
+  ],
+  "state_policy": {
+    "player_progress_removed": "unknown",
+    "required_initialization_structure_preserved": "unknown",
+    "factory_defaults_source": "unknown",
+    "original_always_available_features": [],
+    "optional_unlocks_separate": "unknown",
+    "existing_user_saves_unchanged": "unknown",
+    "snapshot_policy": "unknown"
+  },
+  "behavior_variants": [{"role": "original-flow", "changes": [], "evidence": []}],
+  "validation": {
+    "archive_names_and_bytes": "not-tested",
+    "shared_game_payload_identical": "not-tested",
+    "fresh_extracted_launch": "not-tested",
+    "new_game_and_save_cycle": "not-tested",
+    "window_recording": "not-tested",
+    "fullscreen_recording": "not-tested",
+    "normal_full_playthrough": "not-tested",
+    "complete_human_text_review": "not-tested"
+  },
+  "private_evidence": [],
+  "unresolved": [],
+  "publication": {"user_authorized": false, "content_and_licenses_reviewed": false, "legal_clearance_claimed": false}
 }
 ```
 
@@ -634,6 +882,43 @@ G0～G7：待填
     "expected_active_keys_at_end": 0,
     "broken_variant": "drop the last event; expect one active key"
   }
+}
+```
+
+
+## `examples/binary.json`
+
+```json
+{
+  "origin": "Self-created byte sequences and display nodes; no extracted game data.",
+  "scope": "A deliberately restricted two-byte text field, not a full Shift-JIS decoder or game format.",
+  "profile": {"lead_min": 129, "lead_max": 152, "terminator": 125},
+  "valid_field_hex": "81 7d 82 40 7d",
+  "expected_end_offset": 4,
+  "expected_naive_end_offset": 1,
+  "invalid_fields": [
+    {"id": "truncated_pair", "hex": "81"},
+    {"id": "missing_terminator", "hex": "81 7d"},
+    {"id": "invalid_trail", "hex": "81 7f 7d"},
+    {"id": "outside_vm_leads", "hex": "99 40 7d"},
+    {"id": "standard_lead_outside_vm", "hex": "e0 40 7d"},
+    {"id": "unsupported_ascii", "hex": "41 7d"}
+  ],
+  "original_nodes": [
+    {"op": "text", "value": "這是自製教學短句。下一行保留同一頁。"},
+    {"op": "wait", "ticks": 17},
+    {"op": "page", "index": 2},
+    {"op": "sound", "action": "stop"},
+    {"op": "text", "value": "這一頁保持安靜。"}
+  ],
+  "reflowed_nodes": [
+    {"op": "text", "value": "這是自製教學短句。"},
+    {"op": "text", "value": "下一行保留同一頁。"},
+    {"op": "wait", "ticks": 17},
+    {"op": "page", "index": 2},
+    {"op": "sound", "action": "stop"},
+    {"op": "text", "value": "這一頁保持安靜。"}
+  ]
 }
 ```
 
@@ -775,6 +1060,94 @@ def main():
     assert placeholders(original['source']) != placeholders(bad['translation'])
     print('PASS: zero-underrun slowdown, fast playback, missing note release, unsupported MIDI, and placeholder mismatch detected.')
     print('Scope: synthetic fixtures only. No real game, sound device or full MIDI implementation was tested.')
+
+
+if __name__ == '__main__':
+    main()
+```
+
+
+## `scripts/check_binary_examples.py`
+
+```python
+"""Synthetic character-boundary and reflow examples; no game files are read."""
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def field_end(data, start, limit, profile):
+    """Parse only the fixture's two-byte text subset, bounded by [start, limit)."""
+    if not 0 <= start < limit <= len(data):
+        raise ValueError('Invalid field bounds')
+    position = start
+    while position < limit:
+        lead = data[position]
+        if lead == profile['terminator']:
+            return position
+        if not profile['lead_min'] <= lead <= profile['lead_max']:
+            raise ValueError('Not an admitted text lead byte')
+        if position + 1 >= limit:
+            raise ValueError('Truncated two-byte character')
+        trail = data[position + 1]
+        if not (0x40 <= trail <= 0x7e or 0x80 <= trail <= 0xfc):
+            raise ValueError('Invalid trail byte')
+        position += 2
+    raise ValueError('No standalone terminator in field')
+
+
+def control_skeleton(nodes):
+    """Drop text payloads only; merge adjacent plain display nodes, nothing else."""
+    result = []
+    for node in nodes:
+        if node.get('op') == 'text':
+            if set(node) != {'op', 'value'} or not isinstance(node['value'], str):
+                raise ValueError('Unsupported display node')
+            marker = {'op': 'text'}
+            if not result or result[-1] != marker:
+                result.append(marker)
+        else:
+            result.append(node.copy())
+    return result
+
+
+def rejected(call):
+    try:
+        call()
+    except ValueError:
+        return
+    raise AssertionError('Malformed fixture was accepted')
+
+
+def main():
+    fixture = json.loads((ROOT/'examples/binary.json').read_text(encoding='utf-8'))
+    profile = fixture['profile']
+    data = bytes.fromhex(fixture['valid_field_hex'])
+    actual = field_end(data, 0, len(data), profile)
+    assert actual == fixture['expected_end_offset']
+    # Demonstrate the legacy bug rather than merely asserting our own parser.
+    naive = data.index(profile['terminator'])
+    assert naive == fixture['expected_naive_end_offset'] and naive != actual
+    for case in fixture['invalid_fields']:
+        value = bytes.fromhex(case['hex'])
+        rejected(lambda: field_end(value, 0, len(value), profile))
+    rejected(lambda: field_end(data, 0, 1, profile))
+    rejected(lambda: field_end(data, 0, len(data) - 1, profile))
+    rejected(lambda: field_end(data, -1, len(data), profile))
+    rejected(lambda: field_end(data, 0, len(data) + 1, profile))
+    framed = b'\x7d\x00' + data + b'\x7d'
+    assert field_end(framed, 2, 2 + len(data), profile) == 2 + actual
+    original = control_skeleton(fixture['original_nodes'])
+    reflow = fixture['reflowed_nodes']
+    assert original == control_skeleton(reflow)
+    for removed in ('wait', 'page', 'sound'):
+        broken = [node for node in reflow if node['op'] != removed]
+        assert original != control_skeleton(broken), removed
+    changed_wait = [dict(node, ticks=1) if node['op'] == 'wait' else node for node in reflow]
+    assert original != control_skeleton(changed_wait)
+    print('PASS: trail-byte terminator bug, truncated field, invalid byte, VM lead mismatch, and lost control boundaries detected.')
+    print('Scope: synthetic fixtures only; this is not a Shift-JIS decoder, script compiler, or game validator.')
 
 
 if __name__ == '__main__':

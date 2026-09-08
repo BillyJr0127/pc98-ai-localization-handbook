@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "scope": "Copy into a private project. A clean game package does not imply publication permission.",
+  "build_id": "unknown",
+  "last_handoff_received": false,
+  "input_hash_manifest": "unknown",
+  "packages": [
+    {"role": "dos-only", "status": "not-tested", "sha256": "unknown", "allowlist": [], "external_runtime_dependencies": []},
+    {"role": "with-emulator", "status": "not-tested", "sha256": "unknown", "allowlist": [], "external_runtime_dependencies": []}
+  ],
+  "state_policy": {
+    "player_progress_removed": "unknown",
+    "required_initialization_structure_preserved": "unknown",
+    "factory_defaults_source": "unknown",
+    "original_always_available_features": [],
+    "optional_unlocks_separate": "unknown",
+    "existing_user_saves_unchanged": "unknown",
+    "snapshot_policy": "unknown"
+  },
+  "behavior_variants": [{"role": "original-flow", "changes": [], "evidence": []}],
+  "validation": {
+    "archive_names_and_bytes": "not-tested",
+    "shared_game_payload_identical": "not-tested",
+    "fresh_extracted_launch": "not-tested",
+    "new_game_and_save_cycle": "not-tested",
+    "window_recording": "not-tested",
+    "fullscreen_recording": "not-tested",
+    "normal_full_playthrough": "not-tested",
+    "complete_human_text_review": "not-tested"
+  },
+  "private_evidence": [],
+  "unresolved": [],
+  "publication": {"user_authorized": false, "content_and_licenses_reviewed": false, "legal_clearance_claimed": false}
+}

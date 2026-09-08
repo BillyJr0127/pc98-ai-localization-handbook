@@ -29,6 +29,16 @@
 
 ## 本機研究經驗
 
-LESSONS 的經驗來自一次實際移植、原驅動事件比對、模擬器參考、即時音訊量測與使用者回饋。這些內容屬本教材的方法整理；原始檔案與私人驗證紀錄不在本包內。不能把原實驗中的特定數值、晶片或腳本處理方式當成其他遊戲的既定結論。
+LESSONS 記錄首個案例；FOLLOW-UP 記錄續作案例。來源包括本機原驅動事件比對、模擬器參考、即時音訊量測、文字與模組回歸以及操作回報。編輯本章時只讀檢查程式與既有證據，沒有重新建置或執行私有遊戲。原始檔案、反編譯結果、畫面及私人驗證紀錄不在本包內，外部讀者不能只靠教材重跑這兩個案例。不能把其中的特定數值、晶片或腳本處理方式當成其他遊戲的既定結論。
 
 MIDI／OPNA 分支是供後續研究的設計與驗證方向，沒有聲稱在該個案中已實作完成。本包的合成範例通過，只表示範例的預期判斷成立。
+
+## 字元邊界與宿主錄影
+
+- [WHATWG：Shift_JIS 解碼器](https://encoding.spec.whatwg.org/#shift_jis-decoder)：核對字元邊界與非法序列；本教材的受限範例不是完整標準實作，VM 指令分類仍需另查。
+- [ScreenRecorderLib 原作者專案](https://github.com/sskodje/ScreenRecorderLib)：Windows 錄影與 Media Foundation 編碼介面。首作和續作的具體測試結果仍以各自本機紀錄為準，沒有附第三方 DLL。
+- [Microsoft：Application loopback audio capture](https://learn.microsoft.com/en-us/samples/microsoft/windows-classic-samples/applicationloopbackaudio-sample/)：程序音訊擷取範圍及作業系統要求。其他程序／外接模組未必落在錄音範圍內。
+
+## 網路影片的觀察限制
+
+[使用者提供的參考影片，約 38 秒](https://www.youtube.com/watch?v=7JtNR_tht-o&t=38s)：私人研究交接記錄作者在畫面疊字說明另加配樂；本次編輯未重新取得片段，這筆證據僅標為交接觀察，不列作獨立重核。原作是否靜音另以本機原始劇本與音樂指令查核。不得把作者配樂、版本不同或剪輯過的影片當成原音唯一標準。
