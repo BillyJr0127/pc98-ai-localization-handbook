@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "id": "fill-in",
+  "symptom": "unknown",
+  "build": {"client_sha256": null, "audio_backend_sha256": null, "launcher": "unknown"},
+  "environment": {"machine": "unknown", "emulator_version": "unknown", "cpu_settings": "unknown", "audio_profile_id": "unknown"},
+  "reproduction": {"private_save_reference": null, "steps": [], "input_style": "unknown", "scene_when_problem_starts": "unknown", "scene_when_it_persists": "unknown"},
+  "measurement": {"time_basis": "unknown", "window_start_event": "unknown", "window_end_event": "unknown", "wall_seconds": null, "audio_progress_seconds": null, "underruns": null},
+  "hypotheses": [],
+  "evidence": [],
+  "change": null,
+  "regression_tests": [],
+  "result": "not-tested"
+}

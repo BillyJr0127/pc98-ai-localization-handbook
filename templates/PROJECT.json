@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "project_id": "fill-in",
+  "goal": {"language": "zh-Hant", "runtime_target": "unknown", "preserve_original_behavior": true},
+  "rights": {"source": "unknown", "allowed_local_work": "unknown", "public_release_authorized": false, "notes": []},
+  "inputs": [],
+  "inventory_schema": {"source_id": "string", "bytes": "integer", "sha256": "hex", "container": "unknown", "evidence": []},
+  "engine": {"identity": "unknown", "version": "unknown", "text_encoding": "unknown", "evidence": []},
+  "reference": {"kind": "unknown", "machine": "unknown", "emulator_version": "unknown", "settings_file": null, "scenes": []},
+  "gate_status": {"G0": "not-started", "G1": "not-started", "G2": "not-started", "G3": "not-started", "G4": "not-started", "G5": "not-started", "G6": "not-started", "G7": "not-started"},
+  "audio_profiles": [],
+  "tested_builds": [],
+  "unresolved": [],
+  "next_experiment": null
+}

@@ -1,0 +1,10 @@
+{
+  "provenance": "Original synthetic teaching sentences; not extracted from any game.",
+  "format": "Teaching JSON, not a PC-98 game script format.",
+  "records": [
+    {"id": "demo-001", "speaker": "guide", "source": "{name}さん、橋の向こうを調べましょう。", "translation": "{name}，我們去橋的另一邊看看吧。", "commands_before": ["show_text"], "commands_after": ["wait_confirm"]},
+    {"id": "demo-002", "speaker": "system", "source": "残りは{count}個です。", "translation": "還剩下{count}個。", "commands_before": ["show_text"], "commands_after": ["return_to_menu"]}
+  ],
+  "deliberately_bad_translation": {"id": "demo-002", "translation": "還剩下三個。"},
+  "expected_bad_result": "placeholder mismatch: count was replaced by a fixed number"
+}

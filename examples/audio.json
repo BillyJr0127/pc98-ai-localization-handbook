@@ -1,0 +1,22 @@
+{
+  "provenance": "Synthetic teaching measurements and MIDI notes, not a recording or extraction.",
+  "performance_window": {"same_start_and_end_events": true, "acceptable_ratio_min": 0.95, "acceptable_ratio_max": 1.05},
+  "performance_cases": [
+    {"id": "slow-with-no-underrun", "wall_seconds": 10.0, "audio_seconds": 6.0, "underruns": 0, "expected_pass": false},
+    {"id": "real-time", "wall_seconds": 10.0, "audio_seconds": 10.0, "underruns": 0, "expected_pass": true},
+    {"id": "fast", "wall_seconds": 10.0, "audio_seconds": 13.0, "underruns": 0, "expected_pass": false},
+    {"id": "underrun-at-normal-average", "wall_seconds": 10.0, "audio_seconds": 10.0, "underruns": 1, "expected_pass": false}
+  ],
+  "midi_fixture": {
+    "scope": "Decoded channel-note messages only; no sustain, overlapping same-key notes, SysEx or running status.",
+    "time_unit": "microseconds",
+    "events": [
+      {"t": 0, "bytes": [144, 60, 64]},
+      {"t": 500000, "bytes": [128, 60, 64]},
+      {"t": 750000, "bytes": [144, 64, 64]},
+      {"t": 1250000, "bytes": [144, 64, 0]}
+    ],
+    "expected_active_keys_at_end": 0,
+    "broken_variant": "drop the last event; expect one active key"
+  }
+}

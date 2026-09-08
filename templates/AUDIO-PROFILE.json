@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "profiles": [
+    {
+      "id": "fill-in-per-source-mode",
+      "roles": ["unknown"],
+      "family": "unknown",
+      "family_choices": ["fm-ssg", "opna", "opl", "midi", "pcm-adpcm", "mixed", "unknown"],
+      "source": {"driver": "unknown", "driver_sha256": null, "score_format": "unknown", "banks": [], "clock_hz": null, "evidence": []},
+      "reference": {"device_model": "unknown", "device_revision": "unknown", "initialization": "unknown", "settings": {}, "evidence": []},
+      "midi": {"target_family": "unknown", "interface_mode": "unknown", "division": "unknown", "tempo_map": "unknown", "sysex_required": "unknown", "receiver": "unknown"},
+      "semantics": {"fade_blocks_caller": "unknown", "effect_borrows_voices": "unknown", "loop": "unknown", "stop_policy": "unknown", "snapshot": "unknown"},
+      "backend": {"kind": "unknown", "runs_in": "unknown", "output_device": "unknown", "sample_rate": null, "frames_per_half_buffer": null, "external_dependencies": [], "unsupported_events": []},
+      "verification": {"files": "not-tested", "commands": "not-tested", "events": "not-tested", "synthesis": "not-tested", "real_time": "not-tested", "listening": "not-tested", "evidence": []}
+    }
+  ]
+}
