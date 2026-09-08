@@ -2,6 +2,8 @@
 
 版本 1.0 · 2026-09-08 · 繁體中文
 
+[下載教材 ZIP／AI 單檔版](https://github.com/BillyJr0127/pc98-ai-localization-handbook/releases/latest)
+
 這份手冊把一次 PC-98 → IBM DOS 繁體中文移植的研究方法、失敗經驗及聲音驗證流程整理成可交接給其他 AI 的工作指引。它不是特定商業遊戲的修補包，也不是任意 FDI 的一鍵轉換器。
 
 **使用方式：把 [AI-HANDBOOK.md](AI-HANDBOOK.md) 交給你的 AI，再貼上下面的起始指令。** 單檔版包含所有章節；如果 AI 能讀整個資料夾，也可以先讀 [AI-GUIDE.md](AI-GUIDE.md)。其他 AI 不需要看過我們原本的對話。
