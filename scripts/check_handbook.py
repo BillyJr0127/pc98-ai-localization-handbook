@@ -16,11 +16,14 @@ FILES = {
     'templates/ISSUE.json', 'templates/RELEASE.json', 'examples/text.json', 'examples/audio.json', 'examples/binary.json',
     'scripts/inspect_inputs.py', 'scripts/check_examples.py', 'scripts/check_binary_examples.py', 'scripts/build_handbook.py',
     'scripts/check_handbook.py', 'scripts/build_bundle.py',
+    'FAST-PORT.md', 'TEXT-ROUNDTRIP.md', 'requirements.txt', 'templates/ENGINE-ADAPTER.md',
+    'examples/translation-catalog.json', 'scripts/engine_adapter.py', 'scripts/translation_exchange.py',
+    'scripts/export_workbook.py', 'scripts/import_workbook.py', 'scripts/check_translation_workflow.py',
 }
 
 
 def run(*args, expected=0):
-    result = subprocess.run([sys.executable, *map(str, args)], capture_output=True, text=True, encoding='utf-8')
+    result = subprocess.run([sys.executable, '-X', 'utf8', *map(str, args)], capture_output=True, text=True, encoding='utf-8')
     if expected == 0:
         assert result.returncode == 0, result.stdout + result.stderr
     else:
@@ -55,6 +58,7 @@ def main():
     assert (ROOT/'AI-HANDBOOK.md').read_text(encoding='utf-8') == render(), 'Rebuild the single-file handbook'
     run(ROOT/'scripts/check_examples.py')
     run(ROOT/'scripts/check_binary_examples.py')
+    run(ROOT/'scripts/check_translation_workflow.py')
     # Self-created bytes only; verify reading, hash accuracy and both overwrite guards.
     with tempfile.TemporaryDirectory(prefix='pc98-handbook-check-') as folder:
         temp = Path(folder)

@@ -1,6 +1,6 @@
 # 給 AI 的 PC-98 中文化與音訊研究手冊：單檔版
 
-版本 1.1 · 2026-09-08。由分章文件產生。先讀 AI 工作指引，再依使用者目標開始；不要假設任何 FDI 都能自動轉換。只分析使用者實際提供且可用的資料。本檔包含全部章節、模板、自製範例與三個入門腳本。
+版本 1.2 · 2026-09-10。由分章文件產生。先讀 AI 工作指引，再依使用者目標開始；不要假設任何 FDI 都能自動轉換。只分析使用者實際提供且可用的資料。本檔包含全部章節、模板、自製範例、入門腳本與人工 Excel 往返工具。
 
 使用者請提供：輸入路徑、來源與使用範圍、目標平台、目標語言、希望保留的音源模式。若工具無法讀本機檔案，先說明限制，不聲稱已執行。
 
@@ -16,7 +16,7 @@
 依使用者目標選擇一條主線：
 
 - **保留 PC-98 執行環境，只中文化**：先保留原引擎、原聲音及原硬體介面，優先研究字串與字型。
-- **移植到 IBM DOS，再中文化**：先做未翻譯的最小畫面／輸入／音訊驗證，再逐步替換硬體邊界。DOSBox-X 的 PC-98 模式不等於完成 IBM DOS 移植。
+- **移植到 IBM DOS，再中文化**：先保留原引擎與日文資源，最小硬體轉接後以啟動畫面和一次真實輸入提早展示；接著補換景、存讀檔、音訊及焦點切換等基本驗證，穩定後才中文化。DOSBox-X 的 PC-98 模式不等於完成 IBM DOS 移植。先讀 FAST-PORT.md，不把全文翻譯或全路線測試當成展示的前提。
 - **尚未決定**：先完成唯讀盤點，說明兩條路的成本；問一個必要問題，不要偷偷替使用者選目標。
 
 使用者自備檔案、研究用途或持有正版，都不能單獨用來宣告所有改作及公開行為已獲授權。權利範圍不明時，可整理技術問題並使用本包自製例子演練，不把未知寫成同意。見 RIGHTS.md。
@@ -56,6 +56,8 @@
 
 另一個 AI 接手時，先讀狀態與最近證據，確認當前檔案版本；不要重新執行已失敗且無新條件的方案，也不要把使用者滿意回饋升級成全流程驗收。
 
+需要台詞 Excel 往返時，先依 TEXT-ROUNDTRIP.md 跑完人工範例，再按 `templates/ENGINE-ADAPTER.md` 補該遊戲的提取、位置驗證、字碼／字型、編譯與封存介面。教材匯入器僅輸出候選 JSON；不要假定它已實作遊戲安裝或完整回復。原位 ID、逐語言狀態與字碼配置需穩定，增量建置只重跑有變動的依賴。
+
 若由其他任務製作最後封裝，收到其完成交接後才凍結發布內容。用 RELEASE 模板記錄正常版、診斷版、可選解鎖與宿主工具各自的狀態。原本就全開的選單、原作返回行為、人工新增的完成畫面，要分開標註；測試被中止就是未完成。
 
 ## 完成措辭
@@ -68,6 +70,8 @@
 # 分階段研究流程
 
 每一關都要有輸入、產物、驗證與明確的通過條件。進度可以分支：音訊尚未釐清時可繼續文字盤點，但不得把沒有音樂的畫面展示稱為移植完成。
+
+**關卡編號不是強制施工順序。** IBM DOS 目標在 G0～G2 的必要盤點後，優先走 G5 的原日文最小轉接；啟動畫面與一次真實輸入即可先展示，再補日版基本驗證。要修改文字時才完成相關 G3 往返、G4 中文短例與 G6 分批翻譯。詳見 FAST-PORT.md。保留 PC-98 環境的專案則可不做 G5。
 
 ## G0：來源、目標與可用環境
 
@@ -125,6 +129,8 @@
 
 ## G6：擴大翻譯與回歸
 
+需要由使用者分批翻譯時，依 TEXT-ROUNDTRIP.md 建立 Excel 與原位映射；先跑通公開人工範例，再接實際引擎。整批只讀驗證後產生候選狀態，共用正式建置的字庫檢查，通過再備份、編譯及驗證。某一冊成功不代表其餘冊已翻完或套用。
+
 建立術語表、角色語氣與場景上下文；保留說話者，不把推測當劇情。用穩定 ID 記錄每句譯文，對相同詞彙與數值提示做一致性檢查。含謎題、口令、選項、道具名稱的文字，還要核對它們和遊戲條件的連動。
 
 逐個場景、字型頁與音源模式驗證。已翻譯字串數／已發現字串數／已人工審閱字串數分開報告；未發現內容無法靠百分比保證不存在。圖像中的文字與結局、附加模式也要盤點。
@@ -140,6 +146,225 @@
 「空白」的正確表示要由格式與實際載入證明：有的引擎需要有效結構，有的允許固定長度零值資料表示空槽。首次啟動初始化必須只補缺檔，不能覆寫之後的玩家進度。原本全部可選的音樂欣賞與額外回憶解鎖分開驗證。將可選解鎖、診斷入口與正式包分離；各包從解壓出的新目錄測試，並比對共同核心，詳見 FOLLOW-UP.md。
 
 驗收報告列出：已驗證的機器與音源、場景覆蓋、全文審閱範圍、差異、未解事項、存檔政策、可重跑步驟。使用者對目前聲音滿意是有用的驗收記錄，不替代全曲／實機或其他遊戲的證據。公開是另一項需確認授權與內容的工作，不由技術通過自動觸發。
+
+
+---
+
+# 先跑穩原日文版，再加入中文化
+
+本章來自第三個仍在開發中的私人案例，整理如何縮短第一個可操作版本的等待時間。它不是已完成全文中文化或全程通關的案例。目標是以最少必要修改，先讓原內容在 DOSBox-X 的 **IBM PC 模式**執行；PC-98 模式保留為對照環境。
+
+## 1. 把第一階段交付定義清楚
+
+**最早可見成果**：原日文啟動畫面加上一次真實按鍵或滑鼠輸入有回應，即可先展示給使用者，並列出已知失敗、啟動方式及實際使用的執行檔／設定。不要等下面全部項目通過，才讓使用者看到第一個成果。
+
+**日版基本驗證**：接著涵蓋正常啟動、主選單、代表性選項、姓名或初始化、場景切換、音樂與音效、存讀檔、切換視窗後恢復操作及正常退出。遇到阻礙遊玩的缺陷就修正並重測。基本操作穩定後才開始新翻譯、中文字型、替換介面與其他擴充；已做的中文成果保留在獨立版本。
+
+不必等逐句閱讀、全部分支手動通關後才提供第一個試玩版。以原存檔的隔離副本或診斷入口直達功能，可縮短定位時間；報告要區分正常入口與診斷入口。這個階段的「可試玩」不代表全遊戲相容性已獲保證。
+
+## 2. 重用已知成果，重新確認未知前提
+
+先盤點輸入容器、分割區與檔案系統，再看封存檔目錄、壓縮、引擎與外部模組。同一副檔名、公司、系列或相近的引擎名稱都不足以決定解析方式。第三案例有硬碟映像及多個封存檔，不能套用前兩次磁片的固定配置。
+
+原始 x86 程式、解碼器、劇情控制與音樂演算若可保留，優先轉接硬體依賴。逐項記錄 PC-98 的圖形平面、顯示頁、GRCG、字形介面、滑鼠、鍵盤、計時與音效呼叫。不要為了讓第一張圖出現而重寫整個遊戲。
+
+每個修正記錄原版本雜湊、預期原指令、修改目的與相關測試；不同引擎不能直接套用前作修補位址。載入後可配置的連續記憶體也要記錄，圖片、音源與字庫單獨成功不代表同時放入仍有足夠空間。
+
+## 3. 保留封存資料，替換最少成員
+
+先確認原始壓縮成員可往返，且新產物可被**原引擎的解壓程式**讀回。新增翻譯時，保留未改成員的原儲存資料；若格式允許，可以附加替換成員並更新必要索引，避免重壓全部資源。
+
+這不是任意格式的通用補丁方案。必須另查索引長度、位址上限、對齊、重疊、重複名稱及引擎實際搜尋次序。單純 ZIP 或自製解壓器讀得回，不等於原遊戲接受。
+
+## 4. 音效先和實際互動一起跑
+
+第三案例重新研究了演奏驅動與多種音源路徑，不能沿用首作的單一 YM2203 假設。每個模式分別記錄樂譜選擇、FM／SSG／ADPCM 聲部、混音、取樣率、立體聲配置與硬體轉接。其他平台的 MIDI 或外接音源仍需另外辨識。
+
+保留原停止與淡出語義。同步淡出可能等待 PC-98 顯示訊號，到了 IBM PC 就永遠等不到；解法是確認原演算與時間來源，讓等待期間仍持續供應音訊。不能直接跳過淡出，也不能把靜音當成完成。
+
+本案例曾只在合成音訊**之前**檢查播放期限，合成結束時卻已經錯過期限。計數顯示沒有供應不及，實際錄音仍重複了舊緩衝內容。因此也需檢查合成後的期限，並比對真正送出的音訊。
+
+緩衝應以毫秒及實際聲道格式計算；相同區塊數在單聲道、立體聲或不同位元深度下不代表相同餘裕。增加佇列後也要確認延遲、連續記憶體及場景反應，不能只看 underrun 歸零。
+
+## 5. 顯示與宿主設定是交付的一部分
+
+記錄已測模擬器的精確 build 與雜湊；同版本日期的 Visual Studio、MinGW、SDL 版本未必相同。標準設定、當前目錄、掛載位置與啟動入口要一起交接，不能只給一個 exe。
+
+本案例沿用前作的外部錄影助手：F9／F10 操作的是 Windows 助手，直接啟動 DOSBox-X 不會自動取得這組錄影功能。錄影黑畫面與遊戲視窗本身黑畫面是不同故障，應分別檢查擷取方法、顯示輸出、掛載與原引擎初始化。不可因前作的錄影器已測，就宣稱新作全部顯示模式都通過。
+
+切換焦點後也要測滑鼠重新擷取與座標；初次啟動能點擊，不代表回到視窗後仍可操作。
+
+## 6. 用增量建置縮短每次修改的等待
+
+將日文版設為一般建置入口，中文預覽需要明確選項。原始提取、引擎解包與已驗證的底層產物直接沿用，不在每次改譯文時重跑所有歷史測試產生器。
+
+| 變更 | 應失效的產物 | 可沿用的部分 |
+|---|---|---|
+| 一句譯文 | 該劇本、壓縮成員、必要封存索引 | 沒有受影響的音效與硬體轉接程式 |
+| 新增中文字 | 需要擴充的字庫及相關版面 | 既有字碼位置；其他劇本不應因重新排序而重編 |
+| 編譯選項或工具內容 | 使用該工具／選項的全部目標 | 沒有依賴它的資源 |
+| 圖形或音效相容性修改 | 對應轉接程式與回歸 | 原始圖片、劇情及未改樂譜 |
+| 快取輸出損壞 | 受損目標 | 其他校驗仍正確的目標 |
+
+快取鍵需包含來源內容、工具內容、編譯選項與實際相依檔；命中後也核對輸出雜湊。沒有變更的輸出應保留內容與修改時間。字碼配置採穩定追加，不能每次將所有中文重新排序分配。
+
+若新產物與已測產物逐位元相同，可以沿用既有功能證據，另測快取命中、失效及損毀回復。若來源或執行行為改變，就跑對應回歸；兩種情況都不需要毫無區別地從頭播放整個遊戲。
+
+## 7. 語言切換也是可回復的建置
+
+日文、繁中與其他語言各自保存狀態；不要從當前顯示的語言重新推導原文 ID。匯入器先做只讀檢查，再在關閉遊戲後建立備份、編譯及驗證，失敗回復完整的前一版本。詳見 TEXT-ROUNDTRIP.md。
+
+完成紀錄應列出：原日文版可操作的範圍、代表性特殊模組、各音源模式、存讀檔與退出、中文片段及實際排版範圍。不要將工具可處理整份翻譯表，寫成整份翻譯已經套用並驗收。
+
+
+---
+
+# 台詞 Excel 匯出與分批匯入的可重用設計
+
+本章提供兩種工具的規格與實作方法：把腳本整理成可閱讀的翻譯工作簿，以及將填好的部分譯文可靠地放回原位置。私人案例的引擎轉接、劇本、譯文、字庫與完整工具均不在教材中；公開範例只示範自行撰寫的資料與檢查規則，不是商業遊戲的一鍵 Excel 轉換器。
+
+## 1. 先分清原始位置與翻譯單位
+
+一個對話可能由數個文字呼叫、姓名代入及換行組成；一列 Excel 不必等於一個呼叫。請同時保存兩種身分：
+
+- **位置 ID**：原始檔案加原文字呼叫索引，對應唯一寫回位置。
+- **台詞 ID**：原文、組合模式及必要結構的雜湊，可以對應多個位置。
+
+不要用工作表列號當作 ID。刪掉免譯符號、重新排序、拆冊或去重，都不得重新編號原始位置。完整台詞只是可逆的編輯單位；遇到分支或不支援的動態內容時仍可能不是語言學上的完整句子。
+
+## 2. 匯出器：由已驗證腳本建立工作簿
+
+引擎適配器先輸出可信的文字節點、原始索引、行號、控制邊界與檔案雜湊。最好使用解析樹或已驗證的詞法層，不能用一般正則表達式宣稱支援所有腳本語法。
+
+私人案例在已知的反編譯格式上先遮蔽註解：分號註解、可巢狀區塊註解、字串及跳脫符都需區分。遮蔽時保留換行位置，讓報告仍能指回原行號。未結束的註解要報錯，不能默默少抓後半份檔案。
+
+只合併中間沒有其他指令的相鄰文字呼叫。等待、換頁、顏色、呼叫、清單／分支邊界、行內字元與新說話者，都可能阻止合併。已確認的動態姓名呼叫可轉成一個明確佔位符，但必須保存原呼叫位置；不能把姓名寫死進文字。
+
+純符號可移出可編輯列，仍保留在位置映射中。數值型的行內字元先列為參考，不能當成可自由替換的文字。圖像式標籤、執行檔字串、計算後的文字及字型表另做適配器；因此「腳本台詞匯出」不等於所有畫面文字都已提取。
+
+## 3. 工作簿、映射與拆冊
+
+每冊 Excel 建議包含三張工作表：
+
+| 工作表 | 主要欄位 | 用途 |
+|---|---|---|
+| 文字對照 | 固定編號、種類、原文、各語言譯文、出現次數、說話者、上下文、備註、既有片段 | 主要翻譯介面 |
+| 位置對照 | 台詞 ID、位置 ID、檔案、原片段、前後文 | 追蹤去重後的每一次出現 |
+| 位置覆寫 | 位置 ID、原文、各語言譯文 | 某個場景需要不同譯法時，覆寫共用台詞 |
+
+所有 ID 與文字欄以文字儲存，避免試算表將開頭零、數字或公式樣式內容自動轉型。換行使用明確的序列化規則，匯出／匯入做相反轉換；不可一邊將 `\n` 視為兩個字元，另一邊又當成未定義跳脫。
+
+一冊附一份同名 `.map.json`，保存 schema 版本、原文、模式、原始檔雜湊、每個片段的索引與文字，以及所有出現位置。工作簿提供閱讀視圖；映射提供可回復的寫回證據。映射不是可獨立信任的來源，匯入時還需與本機原腳本重建結果核對。
+
+先以合理筆數拆冊，例如每冊一萬列，再依記憶體與實際效能調整。每次建立新輸出目錄，保留已完成冊、日誌與清單；失敗不可覆蓋使用者之前填寫的 Excel。巨大工作簿不能只憑「檔案已產生」算成功，還需重開、讀回文字與核對位置總數。
+
+若需要單一可攜工作簿，可將映射加入專用隱藏工作表或自訂部件；這是後續擴充選項，需另測體積、編輯器相容性及被使用者刪除時的錯誤。案例目前使用外部配對檔，不能宣稱已完成內嵌方案。
+
+## 4. 去重不能吃掉既有差異
+
+去重鍵除了相同文字，還需包含組合模式與結構，例如各片段的換行數。相同原文但已有不同譯文時保留分列；只翻好一部分的片段另列在備註，不把未完成部分偷偷用原文補齊後標為完成。
+
+翻譯者先編輯共用台詞；某一位置有情境差異時填位置覆寫。匯入器明確規定「位置覆寫優先於共用台詞」。兩筆共用台詞展開後撞到同一位置、兩筆覆寫重複、別名正規化後重複，都應拒絕，不能依資料列先後決定最後值。
+
+## 5. 匯入器：先檢查，再合併目前語言狀態
+
+使用者選擇填好的 `.xlsx`，工具自動讀取同名配對檔；選錯 `.map.json` 或中間 JSON 時，明確指出應選的 Excel 名稱。不要讓使用者在不同檔案格式間猜測。
+
+讀取 Excel 只取文字值，不執行公式、巨集或外部連結。依工作簿關聯找到指定工作表，支援 shared strings 與 inline strings；關鍵欄位若是公式、數值、錯誤值或不合法型別應報錯。限制解壓後大小、成員數與 XML 規模，拒絕不支持的外部關聯。這些檢查是實作要求；不能因為使用 `.xlsx` 副檔名就假定資料安全。
+
+每列至少核對：語言、ID、原文、映射版本、原檔雜湊、實際文字位置、原片段、控制邊界、動態姓名及換行規則。位置路徑限制在專案內，不能接受映射導向任意檔案。行號僅供提示，來源核對不能只靠行號。
+
+分批更新以目前該語言狀態為基底：
+
+- 未出現在這批表格的項目保持不變。
+- 預設空白譯文表示「這次不更新」，保留既有翻譯。
+- 只有明確選擇清空模式時，這批列中的空白才移除既有譯文、回到原文。
+- 繁中、粵語、簡中等語言各自保存，切換不能改變原文 ID 或借用另一種語言當基底。
+
+整批檢查通過才形成候選更新；若有錯誤，列出工作表與實際 Excel 列號，不得先套前半批、遇到後半批失敗才停止。大型案例可彙總前若干個錯誤並提示其餘尚待修正，避免只給第一個模糊斷言。
+
+## 6. 台詞拆回原呼叫的邊界
+
+匯入時根據原映射重建台詞，不能只相信配對檔寫的台詞 ID。確認片段索引連續、原文逐段相同，中間仍沒有新增控制指令；姓名代入模式還需確認原姓名呼叫存在。
+
+再把譯文拆回原有文字呼叫，保留原呼叫數、每段所需換行及動態姓名。案例使用長度比例作候選切點，再找滿足結構的分法；這能保留機器結構，不能保證停頓、語意分行或遊戲畫面美觀。實際渲染仍是另一層檢查。
+
+譯文過短、換行不符、姓名標記數量或括號不符時應拒絕，不能補空呼叫或刪等待來湊合。有些原文的姓名呼叫位於文字之前；只有重新核對到這個原有呼叫，才可接受使用者加在譯文前的姓名註記並移除重複顯示。禁止全域刪除姓名標記或直接放寬規則。
+
+## 7. 字型檢查必須和實際建置共用
+
+先查字型 cmap 的實際覆蓋，不能以「畫出了非空點陣」當作有字，那可能是缺字方框。接著依引擎可用槽位規劃，排除原文與既有配置，保留姓名、按鈕、小字等已使用的位置；容量計算與真正建置必須共用同一配置器。
+
+第三案例原先只掃描一部分漢字區，整冊匯入才出現容量不足。修正擴充到經原引擎與字型處理驗證的其他區域，同時保留舊配置。不能把第三案例的可用區段直接套到前兩代；VM 的指令分類與字碼上限不同。
+
+字形繪製也需共用：空白字元本來就沒有筆畫，是合法字形。半形與全形空白、連續空白、行首行尾空白都要測；非空筆畫斷言不能誤擋它們。容量、編碼可接受、cmap、有正確字形、實際 DOS 字庫讀回與場景排版應分別報告。
+
+## 8. 套用與回復要涵蓋整個版本
+
+先確認遊戲已關閉，以互斥鎖避免兩個匯入器同時套用。保存語言狀態、將修改的來源、執行產物及字型配置報告，記錄哪些檔案原先不存在。玩家存檔、錄影、快照不納入覆寫或刪除範圍。
+
+可先在暫存候選目錄完整建置與驗證，再切換版本；如果現有工具仍需就地建置，失敗時必須回復全部已修改檔案、刪除本次新產物並恢復配置紀錄。只回復文字 JSON，卻留下新字庫或舊姓名映射，仍是損壞的版本。
+
+保存建置日誌、備份清單及成功紀錄；失敗不更新所選語言的成功狀態。關閉 GUI 時若套用尚未結束，先完成或安全回復，不能直接中斷工作執行緒。殘留鎖要提示查閱備份，不能見到鎖就無條件刪除。
+
+## 9. 最低回歸矩陣與擴充介面
+
+| 層級 | 必測案例 |
+|---|---|
+| 提取 | 註解中的假文字、跳脫引號、純符號、行內字元、原索引不重新編號 |
+| 組合 | 相鄰文字、姓名呼叫、等待／分支邊界、相同文字不同既有譯文、部分片段已翻譯 |
+| 工作簿 | 三張表讀回、文字型 ID、真換行、配對檔缺失、公式／數值拒絕、拆冊不漏位置 |
+| 匯入 | 空白保留、明確清空、另一語言獨立、來源改變、路徑越界、展開後重複、位置覆寫 |
+| 字庫 | 新增字不移動舊槽、容量邊界、缺字、合法空白、姓名存檔編碼、DOS 字庫讀回 |
+| 套用 | 成功、編譯中途失敗、回復配置與新檔、存檔不變、併行鎖、程序中止後的恢復 |
+| 遊戲 | 修改場景的原解壓、非文字指令、實際字形／版面、正常互動與聲音 |
+
+跨遊戲共用的是工作簿結構、狀態合併、來源驗證、備份、錯誤回報與測試方法。引擎適配器必須另外提供：文字節點、控制結構、原位寫回、字碼配置、字型繪製、編譯／解壓、成品位置與存檔保護規則。不要把個案的固定檔名、姓名呼叫編號或兩個執行目錄寫成通用介面。
+
+擴充到另一種腳本語言、更多動態變數或其他語言時，先做人工短例子的往返與拒絕測試，再接入真實資料。工具測試通過、使用者整冊只讀檢查通過、整冊真正編譯套用與遊戲畫面驗收，是四個不同里程碑。
+
+## 10. 跑一次公開人工範例
+
+需要 Python 3.10 以上與可公開安裝的 openpyxl；測試使用 openpyxl 3.1.5。這些是 Windows／其他宿主上的工具，不是在 DOS 裡開 Excel。下載教材 ZIP 並解壓後，在教材目錄執行：
+
+```text
+python -m pip install -r requirements.txt
+python scripts/check_translation_workflow.py
+python scripts/export_workbook.py examples/translation-catalog.json --out output/demo
+```
+
+開啟 `output/demo/volume-001.xlsx`。在「文字對照」的 `zh-TW` 欄 C2 填入自行撰寫的 `歡迎，{player}。`，保留姓名標記，儲存並關閉。每列的 ID、原文及同名 `.map.json` 都需保留，再執行：
+
+```text
+python scripts/import_workbook.py examples/translation-catalog.json output/demo/volume-001.xlsx --language zh-TW --out output/candidate-1.json
+```
+
+候選檔內兩個位置會取得同一句譯文。若第二個位置需要不同翻法，可填「位置覆寫」C3，再以先前候選為基底：
+
+```text
+python scripts/import_workbook.py examples/translation-catalog.json output/demo/volume-001.xlsx --language zh-TW --state output/candidate-1.json --out output/candidate-2.json
+```
+
+每次用新的 `--out`。匯出目錄已存在或候選檔已存在都拒絕覆寫。`--rows-per-book 2` 可練習拆冊；`--state` 可在匯出時帶入現有譯文；`--language yue-HK` 或 `zh-CN` 使用另一份獨立語言狀態。預設空白不更新，`--clear-blank` 才清除此批「文字對照」列所涵蓋的既有譯文；「位置覆寫」空白永遠表示沒有覆寫，有內容則優先。
+
+此範例保留真正換行、前後空白與文字型 `=` 開頭內容。它會拒絕公式型儲存格、數值、變更原文、未知／重複 ID、配對檔變更與姓名／換行不符，並附工作表及列號。讀取限制為 ZIP 展開 32 MiB、2,000 成員、每表 100,000 資料列；只接受 UTF-8 XML 元件，拒絕 DTD、外部關聯及二進位附加元件。這是受限交換格式，不能視為任意 Excel 檔案的完整驗證器。
+
+原始 JSON 與既有狀態只讀；全部列檢查成功後才建立候選 JSON。驗證失敗不留下半批候選；寫檔中的斷電、磁碟空間耗盡及一般作業系統錯誤並未提供完整恢復機制。
+
+程式分工：`export_workbook.py`／`import_workbook.py` 是兩個入口，`translation_exchange.py` 負責工作簿、映射及狀態合併，`engine_adapter.py` 提供可執行人工適配器與未實作的遊戲建置介面。契約見附錄 `templates/ENGINE-ADAPTER.md`。公開範例的 schema 1 與私人案例 schema 2 **不互通**，不可拿私人工作簿直接測這個程式。
+
+## 11. 這次證據究竟涵蓋什麼
+
+| 證據 | 實際範圍 | 不能宣稱 |
+|---|---|---|
+| 公開 `check_translation_workflow.py` | 自製四個位置的 XLSX 真正匯出／讀回、三表、拆冊、去重衝突、位置覆寫、空白／語言狀態、重複匯入與錯誤拒絕 | 商業腳本解析、多呼叫拆分、中文字庫、DOS 編譯或安裝已完成 |
+| 第三案例私人文字工具測試 | 人工結構、姓名與換行、原編譯器接受、既有工作簿只讀、隔離的建置成功／失敗回復 | 最新使用者整冊已成功套用；全路線版面已驗收 |
+| 私人字碼與字庫測試 | 3,000 個人工字元含合法空白，編譯／反編譯一致；DOS 字型處理器讀回 94×94 個槽位、282,752 位元組 | 任意引擎可使用同樣字碼；每個真實場景排版都正確 |
+| 第一冊私人只讀預檢 | 10,000 列映射至 42,006 個位置；2,245 一般字形加 8 按鈕字形通過，尚餘 2,170 格 | 全文中文完成、整冊最新版本已實際編譯套用 |
+
+上述私人結果來自既有證據檔的只讀查核，原始內容不公開。本次沒有執行或重建私人遊戲。原始文字呼叫總數也不能當句數或完成百分比。
+
+第 9 節是目標回歸矩陣；程序中止／斷電、備份或磁碟失敗、真實姓名最長版面、原壓縮環狀暫存區及全路線等，仍須由新適配器另行實作與驗證。不要把建議測試寫成已通過。
 
 
 ---
@@ -605,7 +830,7 @@ IBM DOS 目標可以研究對應 MPU-401 介面輸出；先判斷遊戲需要 in
 
 # 參考與證據層級
 
-查核日期：2026-09-08。連結內容及軟體介面可能更新；實際研究要記錄當時版本。這裡只列官方機構、原作者專案與原廠文件，不附下載所得的第三方內容。
+首批來源查核日期：2026-09-08；Excel 文件與第三案例證據追加查核：2026-09-10。連結內容及軟體介面可能更新；實際研究要記錄當時版本。這裡只列官方機構、原作者專案與原廠文件，不附下載所得的第三方內容。
 
 ## 音訊與介面
 
@@ -638,6 +863,15 @@ LESSONS 記錄首個案例；FOLLOW-UP 記錄續作案例。來源包括本機�
 
 MIDI／OPNA 分支是供後續研究的設計與驗證方向，沒有聲稱在該個案中已實作完成。本包的合成範例通過，只表示範例的預期判斷成立。
 
+第三案例新增 FAST-PORT 與 TEXT-ROUNDTRIP，來源是本機交接及既有的文字單位、Excel、字庫／DOS 讀回等證據檔；只讀查核，未重新建置私人遊戲。人工結構回歸與第一冊字形預檢不等於使用者最新整冊成功安裝，亦不代表全路線中文完成。公開程式為另行撰寫的短例骨架，沒有直接複製該案例的完整工具或資料。
+
+## Excel 交換的公開依賴
+
+- [openpyxl 官方教學](https://openpyxl.readthedocs.io/en/stable/tutorial.html)：安裝、建立／儲存工作簿，以及 `data_only`、`read_only`、`keep_links` 行為。普通 `save` 會覆寫既有檔案，本例另以新目錄／排他建立限制輸出。
+- [openpyxl 官方讀取實作](https://openpyxl.readthedocs.io/en/stable/_modules/openpyxl/reader/excel.html)：讀取工作表關聯與載入選項的查核入口。範例使用 `data_only=False` 以辨識並拒絕公式型儲存格，另有 ZIP／XML 限制；不把此設定本身當作安全驗證。
+
+教材以 openpyxl 3.1.5 實測；官方 stable 文件頁可能顯示不同小版本，升級需重跑範例。安裝依賴不會附帶本機字型、私人 runtime、遊戲或音源資料。
+
 ## 字元邊界與宿主錄影
 
 - [WHATWG：Shift_JIS 解碼器](https://encoding.spec.whatwg.org/#shift_jis-decoder)：核對字元邊界與非法序列；本教材的受限範例不是完整標準實作，VM 指令分類仍需另查。
@@ -652,6 +886,15 @@ MIDI／OPNA 分支是供後續研究的設計與驗證方向，沒有聲稱在�
 ---
 
 # 版本紀錄
+
+## 1.2 · 2026-09-10
+
+- 加入第三個仍在開發中的案例：原日文優先、首個畫面及真實輸入提早展示，再補基本驗證及中文化。
+- 補充最小硬體轉接、封存成員保留、連續記憶體、同步淡出、合成後播放期限、焦點恢復與增量建置。
+- 新增台詞 Excel 匯出／匯入設計：穩定位置、完整顯示單位、去重差異、配對映射、分冊、多語狀態及位置覆寫。
+- 提供可實際執行的自製 JSON → XLSX → 候選 JSON 工具、公開 openpyxl 依賴、回歸測試與引擎適配契約；不包含商業遊戲解析器或安裝器。
+- 收錄字庫容量估算與正式配置不一致、合法空白字形誤判、字碼穩定性與 VM 可接受範圍的教訓。
+- 區分人工往返、私人只讀整冊預檢、真正編譯套用、遊戲驗收及一般例外回復／斷電恢復。第三案例不是完整中文正式成品。
 
 ## 1.1 · 2026-09-08
 
@@ -1148,6 +1391,652 @@ def main():
     assert original != control_skeleton(changed_wait)
     print('PASS: trail-byte terminator bug, truncated field, invalid byte, VM lead mismatch, and lost control boundaries detected.')
     print('Scope: synthetic fixtures only; this is not a Shift-JIS decoder, script compiler, or game validator.')
+
+
+if __name__ == '__main__':
+    main()
+```
+
+
+## `requirements.txt`
+
+```text
+openpyxl==3.1.5
+```
+
+
+## `templates/ENGINE-ADAPTER.md`
+
+```markdown
+# 引擎適配器實作契約
+
+這是新遊戲必須自行完成的工作清單；公開包只有自製 JSON 的 `SyntheticAdapter` 可執行。`scripts/engine_adapter.py` 的 `ExchangeAdapter`／`GameBuildAdapter` 是 Python Protocol 型別介面，不是已完成的遊戲解析或編譯器。
+
+## 原文與文字交換
+
+| 介面 | 輸入／輸出 | 必須驗證 |
+|---|---|---|
+| `extract(originals)` | 唯讀原始目錄 → `ExchangeAdapter` | 容器範圍、原檔雜湊、腳本語法、文字節點、控制邊界、穩定位置 ID |
+| `catalog`、`occurrences`、`fingerprint` | 正規化原文、位置索引、來源識別 | 映射可由原檔重新產生；ID 不得被直接當任意讀寫路徑 |
+| `split_translation(occurrence, translation)` | 完整譯文 → 原呼叫數相同的文字片段列表 | 姓名變數、非文字指令、各段換行、可接受字元及固定欄位 |
+
+人工 schema 1 只有 `id/source/mode=single`，一個位置恰好一個文字呼叫。來源識別是正規化 JSON 的 SHA-256，忽略 JSON 排版空白但保留實際字串空白；配對檔與語言狀態都綁定此識別，來源變動後需明確遷移，不能直接混用舊狀態。兩個相同原文位置可以共用台詞列；既有譯文不同時分列。範例的台詞 ID 包含所涵蓋位置，因此分組成員改變就會改變 ID；位置 ID 才是語言狀態的長期鍵。
+
+真實引擎需另定帶版本的 schema，加入原檔 SHA、片段索引／原文、控制結構摘要、合併模式與上下文；同步擴充 `validate_mapping`、`make_units` 及拆回片段的處理。不能把原始二進位解碼成任意字串後直接餵入人工 schema，便稱為完整提取。部分片段譯文、多呼叫姓名結構與動態內嵌內容目前只有設計說明，沒有在人工適配器實作。
+
+## 字庫、編譯與封存
+
+| 介面 | 輸出與責任 |
+|---|---|
+| `plan_glyphs(candidate, previous)` | 使用正式建置同一套 cmap／槽位配置／點陣繪製，回傳穩定追加的映射與容量報告；缺字及容量不足拒絕 |
+| `encode(occurrence, parts, glyphs)` | 編碼後位元組；通過 VM 字碼限制、長度及解碼往返，保留所有原控制指令 |
+| `build_staged(candidate, glyphs, staging)` | 在全新候選目錄增量編譯、更新封存成員，回傳所有成品雜湊；不寫原檔或玩家資料 |
+| `verify_staged(staging, manifest)` | 以原解碼器讀回，確認文字與非文字結構、字庫及輸出清單；回傳通過範圍與未測項目 |
+
+上述後半段**未實作**。驗證失敗必須回傳錯誤，不能用空字庫、空輸出或恆真結果占位後聲稱完成。
+
+## 套用協調器另行實作
+
+工作簿匯入器目前只產生新的候選語言 JSON。它不會呼叫 `GameBuildAdapter`，不會保存啟用語言或安裝執行檔。連接到遊戲前另寫協調器：確認本專案遊戲關閉 → 互斥鎖 → 完整備份與紀錄 → 候選建置／驗證 → 切換版本 → 保存成功語言狀態。保留玩家存檔、快照與錄影，失敗回復包含字型／姓名配置的整個版本。
+
+為每個引擎列出可寫路徑、保護路徑、原先不存在的檔案及復原順序。例外回復不等於崩潰／斷電原子性；後者另需日誌、磁碟寫入順序、重啟恢復及故障注入測試。不得聲稱本人工 Excel 測試已驗證這些功能。
+```
+
+
+## `examples/translation-catalog.json`
+
+```json
+{
+  "schema": 1,
+  "adapter": "synthetic-single-call-v1",
+  "occurrences": [
+    {"id": "demo/room-a:T00000", "source": "Welcome, {player}.", "mode": "single"},
+    {"id": "demo/room-b:T00003", "source": "Welcome, {player}.", "mode": "single"},
+    {"id": "demo/room-a:T00002", "source": "The lamp is on.\nThe desk is empty.", "mode": "single"},
+    {"id": "demo/menu:T00007", "source": "=This is literal text.", "mode": "single"}
+  ]
+}
+```
+
+
+## `scripts/engine_adapter.py`
+
+```python
+"""An executable synthetic adapter and explicit, unimplemented game build boundary."""
+import hashlib
+import json
+import re
+from pathlib import Path
+from typing import Protocol
+
+
+def digest(value):
+    return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
+                                     separators=(',', ':')).encode('utf-8')).hexdigest()
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def literal(value):
+    require(isinstance(value, str) and 0 < len(value) <= 30000,
+            'Expected nonempty text of at most 30000 characters')
+    require(not any(ord(c) < 32 and c != '\n' for c in value), 'Unsupported control character')
+    require(not any(0xD800 <= ord(c) <= 0xDFFF or ord(c) in (0xFFFE, 0xFFFF)
+                    for c in value), 'Unsupported Unicode character')
+    return value
+
+
+class ExchangeAdapter(Protocol):
+    """Adapters must validate against immutable originals, not only a sidecar."""
+    catalog: dict
+    occurrences: dict
+    fingerprint: str
+
+    def split_translation(self, occurrence: dict, translation: str) -> list[str]:
+        """Validate boundaries/tokens/newlines; return exactly the original call count."""
+        ...
+
+
+class GameBuildAdapter(Protocol):
+    """NOT implemented by this teaching package. Methods must fail on unmet contracts."""
+
+    def extract(self, originals: Path) -> ExchangeAdapter:
+        """Parse actual scripts, group safe text nodes, bind source and control hashes."""
+        ...
+
+    def plan_glyphs(self, candidate: dict, previous: dict) -> dict:
+        """Use the build's allocator/rasterizer; preserve existing codes; reject missing glyphs."""
+        ...
+
+    def encode(self, occurrence: dict, parts: list[str], glyphs: dict) -> bytes:
+        """Check VM byte restrictions and decoding identity, not merely codec support."""
+        ...
+
+    def build_staged(self, candidate: dict, glyphs: dict, staging: Path) -> dict:
+        """Build into fresh staging; return file hashes; never write originals or saves."""
+        ...
+
+    def verify_staged(self, staging: Path, manifest: dict) -> dict:
+        """Read with original decoders; check controls/fonts; emit bounded evidence."""
+        ...
+
+
+class SyntheticAdapter:
+    """Only a self-authored JSON catalog. No FDI, script parser, glyphs or DOS compiler."""
+    def __init__(self, catalog):
+        require(catalog.get('schema') == 1 and
+                catalog.get('adapter') == 'synthetic-single-call-v1', 'Unknown catalog schema/adapter')
+        require(isinstance(catalog.get('occurrences'), list) and
+                0 < len(catalog['occurrences']) <= 100000, 'Invalid catalog size')
+        self.catalog = catalog
+        self.occurrences = {}
+        for occurrence in catalog['occurrences']:
+            require(set(occurrence) == {'id', 'source', 'mode'}, 'Unexpected occurrence fields')
+            oid = occurrence['id']
+            require(isinstance(oid, str) and re.fullmatch(r'[a-z0-9_-]+/[a-z0-9_-]+:T[0-9]{5}', oid),
+                    'Invalid synthetic position ID (IDs are never filesystem paths)')
+            require(oid not in self.occurrences, 'Duplicate position ID')
+            literal(occurrence['source'])
+            require(occurrence['mode'] == 'single', 'Synthetic adapter supports single calls only')
+            self.occurrences[oid] = occurrence
+        self.fingerprint = digest(catalog)
+
+    def split_translation(self, occurrence, translation):
+        literal(translation)
+        source = occurrence['source']
+        require(re.findall(r'\{[^{}]*\}', translation) == re.findall(r'\{[^{}]*\}', source),
+                'Dynamic tokens must retain their order and count')
+        require(translation.count('{') == source.count('{') and
+                translation.count('}') == source.count('}'), 'Changed token braces')
+        require(translation.count('\n') == source.count('\n'), 'Changed newline count')
+        return [translation]
+```
+
+
+## `scripts/translation_exchange.py`
+
+```python
+"""Bounded XLSX exchange for normalized synthetic text, producing candidate state only."""
+import copy
+import io
+import json
+import zipfile
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+from openpyxl import Workbook, load_workbook
+from openpyxl.styles import Alignment, Font, PatternFill
+
+from engine_adapter import SyntheticAdapter, digest, literal, require
+
+LANGUAGES = ('zh-TW', 'yue-HK', 'zh-CN')
+HEADERS = ('ID', 'source', *LANGUAGES)
+SHEETS = ('文字對照', '位置對照', '位置覆寫')
+MAX_BYTES = 32 * 1024 * 1024
+
+
+def read_json(path):
+    require(path.stat().st_size <= MAX_BYTES, 'JSON exceeds 32 MiB')
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            require(key not in result, f'Duplicate JSON key: {key}')
+            result[key] = value
+        return result
+    return json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique)
+
+
+def write_new_json(path, value):
+    # Serialize fully before creating output, and never truncate an existing file.
+    payload = json.dumps(value, ensure_ascii=False, indent=2) + '\n'
+    with path.open('x', encoding='utf-8', newline='\n') as handle:
+        handle.write(payload)
+
+
+def load_state(adapter, state=None):
+    if state is None:
+        return {'schema': 1, 'catalog_sha256': adapter.fingerprint,
+                'languages': {lang: {} for lang in LANGUAGES}}
+    require(state.get('schema') == 1 and set(state.get('languages', {})) == set(LANGUAGES),
+            'Unknown state schema or languages')
+    require(state.get('catalog_sha256') == adapter.fingerprint, 'State belongs to a different original catalog')
+    for lang, values in state['languages'].items():
+        require(isinstance(values, dict), f'Invalid state language: {lang}')
+        for oid, value in values.items():
+            require(oid in adapter.occurrences, f'State has unknown position: {oid}')
+            adapter.split_translation(adapter.occurrences[oid], value)
+    return copy.deepcopy(state)
+
+
+def make_units(adapter, state):
+    groups = {}
+    for item in adapter.catalog['occurrences']:
+        translations = {lang: state['languages'][lang].get(item['id'], '') for lang in LANGUAGES}
+        # Different existing translations must never collapse into one row.
+        key = digest({'source': item['source'], 'mode': item['mode'], 'translations': translations})
+        group = groups.setdefault(key, {'source': item['source'], 'mode': item['mode'],
+                                        'occurrences': [], 'translations': translations})
+        group['occurrences'].append(item)
+    units = []
+    for group in groups.values():
+        group['id'] = 'U-' + digest({k: group[k] for k in ('source', 'mode', 'occurrences')})
+        units.append(group)
+    return units
+
+
+def append_text(sheet, values):
+    row = sheet.max_row + 1 if sheet.cell(1, 1).value is not None else 1
+    for column, value in enumerate(values, 1):
+        cell = sheet.cell(row, column, value)
+        cell.data_type = 's'  # A source beginning with '=' stays text, never a formula.
+        cell.number_format = '@'
+        cell.alignment = Alignment(vertical='top', wrap_text=True)
+
+
+def export_workbooks(adapter, destination, state=None, rows_per_book=10000):
+    require(1 <= rows_per_book <= 10000, 'rows_per_book must be 1..10000')
+    state = load_state(adapter, state)
+    units = make_units(adapter, state)
+    destination.mkdir(parents=True, exist_ok=False)
+    manifest = {'schema': 1, 'catalog_sha256': adapter.fingerprint, 'books': []}
+    for start in range(0, len(units), rows_per_book):
+        selected = units[start:start + rows_per_book]
+        name = f'volume-{len(manifest["books"]) + 1:03}.xlsx'
+        book = Workbook()
+        book.remove(book.active)
+        for title in SHEETS:
+            sheet = book.create_sheet(title)
+            append_text(sheet, HEADERS if title != SHEETS[1] else ('unit_id', 'occurrence_id', 'source'))
+        for unit in selected:
+            append_text(book[SHEETS[0]], [unit['id'], unit['source'],
+                                          *[unit['translations'][lang] for lang in LANGUAGES]])
+            for item in unit['occurrences']:
+                append_text(book[SHEETS[1]], [unit['id'], item['id'], item['source']])
+                # Overrides start blank so shared edits can take effect.
+                append_text(book[SHEETS[2]], [item['id'], item['source'], '', '', ''])
+        for sheet in book:
+            sheet.freeze_panes = 'C2'
+            sheet.auto_filter.ref = sheet.dimensions
+            for cell in sheet[1]:
+                cell.font = Font(bold=True, color='FFFFFF')
+                cell.fill = PatternFill('solid', fgColor='244863')
+            for column in ('A', 'B', 'C', 'D', 'E'):
+                sheet.column_dimensions[column].width = 48 if column != 'A' else 30
+        workbook_path = destination/name
+        book.save(workbook_path)
+        book.close()
+        mapping = {'schema': 1, 'adapter': adapter.catalog['adapter'],
+                   'catalog_sha256': adapter.fingerprint,
+                   'units': [{k: v for k, v in unit.items() if k != 'translations'} for unit in selected]}
+        write_new_json(workbook_path.with_suffix('.map.json'), mapping)
+        manifest['books'].append({'xlsx': name, 'units': len(selected),
+                                  'positions': sum(len(unit['occurrences']) for unit in selected)})
+    write_new_json(destination/'manifest.json', manifest)
+    return manifest
+
+
+def checked_workbook(path):
+    require(path.suffix.lower() == '.xlsx', 'Select the .xlsx, not its .map.json')
+    require(path.stat().st_size <= MAX_BYTES, 'Workbook exceeds 32 MiB')
+    # Inspect and parse the same byte snapshot; no race between ZIP check and load.
+    data = path.read_bytes()
+    with zipfile.ZipFile(io.BytesIO(data)) as archive:
+        infos = archive.infolist()
+        names = [info.filename for info in infos]
+        require(len(infos) <= 2000 and len(set(names)) == len(names), 'Excessive/duplicate ZIP entries')
+        require(sum(info.file_size for info in infos) <= MAX_BYTES, 'Expanded workbook exceeds 32 MiB')
+        for info in infos:
+            name = info.filename
+            require('..' not in name.split('/') and '\\' not in name and not name.startswith('/'),
+                    'Unsafe ZIP member name')
+            require(name.endswith(('.xml', '.rels')), 'Only XML workbook parts are supported')
+            raw = archive.read(info)
+            # This limited reader accepts UTF-8 XML only; reject DTDs before any XML parser.
+            xml = raw.decode('utf-8-sig')
+            require('<!DOCTYPE' not in xml.upper() and '<!ENTITY' not in xml.upper(), 'DTD/entities rejected')
+            root = ET.fromstring(xml)
+            for node in root.iter():
+                require(node.attrib.get('TargetMode', '').lower() != 'external', 'External relationship rejected')
+    book = load_workbook(io.BytesIO(data), read_only=True, data_only=False, keep_links=False)
+    try:
+        require(tuple(book.sheetnames) == SHEETS, 'Expected the three exported worksheets in order')
+        for sheet in book:
+            # Do not trust Excel's cached dimension: stream every physical row instead.
+            sheet.reset_dimensions()
+        return book
+    except Exception:
+        book.close()
+        raise
+
+
+def validate_mapping(adapter, mapping):
+    require(mapping.get('schema') == 1 and mapping.get('adapter') == adapter.catalog['adapter'],
+            'Unknown map schema/adapter')
+    require(mapping.get('catalog_sha256') == adapter.fingerprint, 'Original catalog changed')
+    require(isinstance(mapping.get('units'), list) and 0 < len(mapping['units']) <= 10000, 'Invalid map size')
+    units, positions = {}, {}
+    for unit in mapping['units']:
+        require(set(unit) == {'id', 'source', 'mode', 'occurrences'}, 'Invalid mapped unit fields')
+        uid = 'U-' + digest({k: unit[k] for k in ('source', 'mode', 'occurrences')})
+        require(uid == unit['id'] and uid not in units, 'Changed/duplicate unit ID')
+        require(isinstance(unit['occurrences'], list) and unit['occurrences'], 'Missing mapped positions')
+        for item in unit['occurrences']:
+            oid = item.get('id')
+            require(oid in adapter.occurrences and item == adapter.occurrences[oid], 'Changed original position')
+            require(item['source'] == unit['source'] and item['mode'] == unit['mode'], 'Changed unit structure')
+            require(oid not in positions, 'Mapped position appears more than once')
+            positions[oid] = item
+        units[uid] = unit
+    return units, positions
+
+
+def read_rows(sheet, expected_headers, errors):
+    rows = sheet.iter_rows()
+    first = next(rows, ())
+    headers = [cell.value for cell in first]
+    require(len(headers) == len(expected_headers) and set(headers) == set(expected_headers),
+            f'{sheet.title}: incorrect or duplicate headers')
+    require(all(cell.data_type in ('s', 'inlineStr') for cell in first), 'Headers must be text')
+    for number, cells in enumerate(rows, 2):
+        require(number <= 100001, f'{sheet.title}: row limit exceeded')
+        if all(cell.value is None for cell in cells):
+            continue
+        if len(cells) > len(headers) and any(c.value is not None for c in cells[len(headers):]):
+            errors.append(f'{sheet.title}!{number}: unexpected extra cells')
+            continue
+        values = {}
+        valid = True
+        for index, header in enumerate(headers):
+            cell = cells[index] if index < len(cells) else None
+            value = cell.value if cell else None
+            if value is not None and (not isinstance(value, str) or cell.data_type not in ('s', 'inlineStr')):
+                errors.append(f'{sheet.title}!{number} ({header}): text required; formulas/numbers rejected')
+                valid = False
+            values[header] = '' if value is None else value
+        if valid:
+            yield number, values
+
+
+def import_candidate(adapter, workbook_path, language, state=None, clear_blank=False):
+    require(language in LANGUAGES, 'Unknown language')
+    require(workbook_path.suffix.lower() == '.xlsx', 'Select an .xlsx workbook')
+    mapping_path = workbook_path.with_suffix('.map.json')
+    require(mapping_path.is_file(), 'Missing companion .map.json')
+    units, positions = validate_mapping(adapter, read_json(mapping_path))
+    candidate = load_state(adapter, state)
+    updates, overrides, errors = {}, {}, []
+    book = checked_workbook(workbook_path)
+    try:
+        for title, table in ((SHEETS[0], units), (SHEETS[2], positions)):
+            seen = set()
+            for number, row in read_rows(book[title], HEADERS, errors):
+                where = f'{title}!{number}'
+                try:
+                    identifier = row['ID']
+                    require(identifier in table, 'Unknown ID')
+                    require(identifier not in seen, 'Duplicate row ID')
+                    seen.add(identifier)
+                    item = table[identifier]
+                    require(row['source'] == item['source'], 'Source text changed')
+                    value = row[language]
+                    targets = item['occurrences'] if title == SHEETS[0] else [item]
+                    # Blank overrides always mean no override; clearing is a unit-row action.
+                    if value == '' and (not clear_blank or title == SHEETS[2]):
+                        continue
+                    for occurrence in targets:
+                        if value != '':
+                            parts = adapter.split_translation(occurrence, value)
+                            require(len(parts) == 1 and parts[0] == value, 'Synthetic split identity failed')
+                        destination = updates if title == SHEETS[0] else overrides
+                        require(occurrence['id'] not in destination, 'Duplicate expanded position')
+                        destination[occurrence['id']] = value
+                except ValueError as error:
+                    errors.append(f'{where}: {error}')
+        # Reference-only rows are checked for text types, but never used as write targets.
+        list(read_rows(book[SHEETS[1]], ('unit_id', 'occurrence_id', 'source'), errors))
+    finally:
+        book.close()
+    require(not errors, '\n'.join(errors[:50]) + (f'\nTotal errors: {len(errors)}' if len(errors) > 50 else ''))
+    updates.update(overrides)
+    for oid, value in updates.items():
+        if value == '':
+            candidate['languages'][language].pop(oid, None)
+        else:
+            candidate['languages'][language][oid] = value
+    return candidate
+```
+
+
+## `scripts/export_workbook.py`
+
+```python
+"""Export self-authored normalized text to a fresh directory of XLSX/map pairs."""
+import argparse
+from pathlib import Path
+from engine_adapter import SyntheticAdapter
+from translation_exchange import export_workbooks, read_json
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('catalog', type=Path)
+    parser.add_argument('--out', required=True, type=Path, help='New directory; must not already exist')
+    parser.add_argument('--state', type=Path)
+    parser.add_argument('--rows-per-book', type=int, default=10000)
+    args = parser.parse_args()
+    try:
+        manifest = export_workbooks(SyntheticAdapter(read_json(args.catalog)), args.out,
+                                    read_json(args.state) if args.state else None, args.rows_per_book)
+    except (ValueError, OSError) as error:
+        parser.exit(1, f'{error}\n')
+    print(f'Exported {len(manifest["books"])} workbook(s); original catalog unchanged.')
+
+
+if __name__ == '__main__':
+    main()
+```
+
+
+## `scripts/import_workbook.py`
+
+```python
+"""Validate an XLSX batch and write a NEW candidate JSON; never compile or modify a game."""
+import argparse
+import zipfile
+from pathlib import Path
+from engine_adapter import SyntheticAdapter
+from translation_exchange import LANGUAGES, import_candidate, read_json, write_new_json
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('catalog', type=Path)
+    parser.add_argument('workbook', type=Path)
+    parser.add_argument('--language', choices=LANGUAGES, default='zh-TW')
+    parser.add_argument('--state', type=Path, help='Previous language-state JSON; read only')
+    parser.add_argument('--out', required=True, type=Path, help='New candidate JSON; no overwrite')
+    parser.add_argument('--clear-blank', action='store_true', help='Clear blank unit rows in this batch only')
+    args = parser.parse_args()
+    try:
+        candidate = import_candidate(SyntheticAdapter(read_json(args.catalog)), args.workbook,
+                                     args.language, read_json(args.state) if args.state else None,
+                                     args.clear_blank)
+        write_new_json(args.out, candidate)
+    except (ValueError, OSError, zipfile.BadZipFile) as error:
+        parser.exit(1, f'{error}\n')
+    print('Candidate state written. No game build, font generation or installation was performed.')
+
+
+if __name__ == '__main__':
+    main()
+```
+
+
+## `scripts/check_translation_workflow.py`
+
+```python
+"""Executable synthetic XLSX regression; no commercial data or game build is used."""
+import copy
+import json
+import subprocess
+import sys
+import tempfile
+import zipfile
+from pathlib import Path
+
+from openpyxl import load_workbook
+from engine_adapter import SyntheticAdapter, digest
+from translation_exchange import (SHEETS, export_workbooks, import_candidate,
+                                  load_state, read_json, write_new_json)
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def reject(function, contains=None):
+    try:
+        function()
+    except (ValueError, OSError) as error:
+        if contains:
+            assert contains in str(error), str(error)
+        return
+    raise AssertionError('Expected rejection')
+
+
+def main():
+    adapter = SyntheticAdapter(read_json(ROOT/'examples/translation-catalog.json'))
+    original = copy.deepcopy(adapter.catalog)
+    first, second, third, fourth = [item['id'] for item in adapter.catalog['occurrences']]
+    state = load_state(adapter)
+    state['languages']['zh-TW'][third] = '燈亮著。\n桌面是空的。'
+    state['languages']['yue-HK'][first] = '你好，{player}。'
+    with tempfile.TemporaryDirectory(prefix='pc98-excel-example-') as folder:
+        temp = Path(folder)
+        # CLI smoke: independent exporter and importer operate on real files.
+        def cli(script, *args, ok=True):
+            result = subprocess.run([sys.executable, '-X', 'utf8', str(ROOT/'scripts'/script), *map(str, args)],
+                                    capture_output=True, text=True, encoding='utf-8')
+            assert (result.returncode == 0) == ok, result.stdout + result.stderr
+            return result
+        catalog_path = ROOT/'examples/translation-catalog.json'
+        cli('export_workbook.py', catalog_path, '--out', temp/'cli')
+        cli('import_workbook.py', catalog_path, temp/'cli/volume-001.xlsx', '--out', temp/'candidate.json')
+        assert read_json(temp/'candidate.json') == load_state(adapter)
+        candidate_bytes = (temp/'candidate.json').read_bytes()
+        cli('import_workbook.py', catalog_path, temp/'cli/volume-001.xlsx', '--out', temp/'candidate.json', ok=False)
+        assert (temp/'candidate.json').read_bytes() == candidate_bytes
+        # Dedup and splitting: four positions become three units, in two books.
+        manifest = export_workbooks(adapter, temp/'split', rows_per_book=2)
+        assert [book['units'] for book in manifest['books']] == [2, 1]
+        assert sum(book['positions'] for book in manifest['books']) == 4
+        conflict = load_state(adapter)
+        conflict['languages']['zh-TW'][first] = '歡迎，{player}。'
+        conflict['languages']['zh-TW'][second] = '請進，{player}。'
+        assert export_workbooks(adapter, temp/'conflict', conflict)['books'][0]['units'] == 4
+        export_workbooks(adapter, temp/'中文資料夾')
+        workbook = temp/'中文資料夾/volume-001.xlsx'
+        map_path = workbook.with_suffix('.map.json')
+        pristine = workbook.read_bytes()
+        map_bytes = map_path.read_bytes()
+        def edit(callback):
+            workbook.write_bytes(pristine)
+            book = load_workbook(workbook)
+            try:
+                callback(book)
+                book.save(workbook)
+            finally:
+                book.close()
+        book = load_workbook(workbook)
+        assert tuple(book.sheetnames) == SHEETS
+        assert book[SHEETS[0]]['B4'].value.startswith('=') and book[SHEETS[0]]['B4'].data_type == 's'
+        assert book[SHEETS[0]]['B3'].value.count('\n') == 1
+        book.close()
+        # An empty workbook batch preserves current and unrelated language state.
+        assert import_candidate(adapter, workbook, 'zh-TW', state) == state
+        cleared = import_candidate(adapter, workbook, 'zh-TW', state, clear_blank=True)
+        assert third not in cleared['languages']['zh-TW'] and cleared['languages']['yue-HK'] == state['languages']['yue-HK']
+        def translated(book):
+            book[SHEETS[0]]['C2'] = '歡迎，{player}。'
+            book[SHEETS[2]]['C3'] = '請進，{player}。'
+        edit(translated)
+        candidate = import_candidate(adapter, workbook, 'zh-TW', state)
+        assert candidate['languages']['zh-TW'][first] == '歡迎，{player}。'
+        assert candidate['languages']['zh-TW'][second] == '請進，{player}。'
+        assert candidate['languages']['zh-TW'][third] == state['languages']['zh-TW'][third]
+        assert candidate['languages']['yue-HK'] == state['languages']['yue-HK']
+        assert import_candidate(adapter, workbook, 'zh-TW', candidate) == candidate
+        assert import_candidate(adapter, temp/'split/volume-002.xlsx', 'zh-TW', candidate,
+                                clear_blank=True)['languages']['zh-TW'] == candidate['languages']['zh-TW']
+        # All failures leave the old state unchanged and CLI never emits a partial candidate.
+        state_before = copy.deepcopy(state)
+        wrong_state = copy.deepcopy(state)
+        wrong_state['catalog_sha256'] = '0' * 64
+        reject(lambda: import_candidate(adapter, workbook, 'zh-TW', wrong_state), 'different original catalog')
+        failures = [('C2', '=1+1', 'formulas/numbers'), ('C2', 12, 'formulas/numbers'),
+                    ('B2', 'Changed original', 'Source text'), ('C2', 'Missing name', 'Dynamic tokens'),
+                    ('C3', 'Missing line break', 'newline'), ('C2', 'Tab\t{player}', 'control')]
+        for cell, value, expected in failures:
+            edit(lambda book, c=cell, v=value: setattr(book[SHEETS[0]][c], 'value', v))
+            reject(lambda: import_candidate(adapter, workbook, 'zh-TW', state), expected)
+            cli('import_workbook.py', catalog_path, workbook, '--out', temp/'failed.json', ok=False)
+            assert not (temp/'failed.json').exists()
+        def two_errors(book):
+            book[SHEETS[0]]['C2'] = 'Name missing'
+            book[SHEETS[0]]['C3'] = 'Newline missing'
+        edit(two_errors)
+        try:
+            import_candidate(adapter, workbook, 'zh-TW', state)
+            raise AssertionError('Expected two row errors')
+        except ValueError as error:
+            assert '文字對照!2' in str(error) and '文字對照!3' in str(error)
+        edit(lambda book: book[SHEETS[0]].append([cell.value for cell in book[SHEETS[0]][2]]))
+        reject(lambda: import_candidate(adapter, workbook, 'zh-TW', state), 'Duplicate row')
+        edit(lambda book: book[SHEETS[2]].append([cell.value for cell in book[SHEETS[2]][2]]))
+        reject(lambda: import_candidate(adapter, workbook, 'zh-TW', state), 'Duplicate row')
+        workbook.write_bytes(pristine)
+        map_path.rename(temp/'held.map.json')
+        reject(lambda: import_candidate(adapter, workbook, 'zh-TW', state), 'Missing companion')
+        (temp/'held.map.json').rename(map_path)
+        changed = copy.deepcopy(original)
+        changed['occurrences'][0]['source'] = 'Different original'
+        reject(lambda: import_candidate(SyntheticAdapter(changed), workbook, 'zh-TW'), 'catalog changed')
+        mapping = json.loads(map_bytes)
+        mapping['units'][0]['occurrences'][0]['id'] = '../escape:T00000'
+        mapping['units'][0]['id'] = 'U-' + digest({k: mapping['units'][0][k] for k in ('source', 'mode', 'occurrences')})
+        map_path.write_text(json.dumps(mapping), encoding='utf-8')
+        reject(lambda: import_candidate(adapter, workbook, 'zh-TW'), 'original position')
+        map_path.write_bytes(map_bytes)
+        reject(lambda: export_workbooks(adapter, temp/'中文資料夾'))
+        assert workbook.read_bytes() == pristine
+        # Literal formula-like translated text and whitespace survive untouched.
+        def literal_translation(book):
+            book[SHEETS[0]]['C4'] = '=純文字'
+            book[SHEETS[0]]['C4'].data_type = 's'
+            book[SHEETS[0]]['C2'] = '  歡迎，{player}。  '
+        edit(literal_translation)
+        result = import_candidate(adapter, workbook, 'zh-TW')
+        assert result['languages']['zh-TW'][fourth] == '=純文字'
+        assert result['languages']['zh-TW'][first] == '  歡迎，{player}。  '
+        # ZIP bounds and external relationship/DTD rejection happen before workbook parsing.
+        for payload, expected in [
+            (b'<!DOCTYPE x [<!ENTITY y "z">]><x/>', 'DTD/entities'),
+            (b'<Relationships><Relationship TargetMode="External" Target="https://example.invalid"/></Relationships>', 'External relationship')]:
+            workbook.write_bytes(pristine)
+            with zipfile.ZipFile(workbook, 'a') as archive:
+                archive.writestr('test.rels', payload)
+            reject(lambda: import_candidate(adapter, workbook, 'zh-TW'), expected)
+        workbook.write_bytes(pristine)
+        with zipfile.ZipFile(workbook, 'a', zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr('oversize.xml', b' ' * (32 * 1024 * 1024))
+        reject(lambda: import_candidate(adapter, workbook, 'zh-TW'), 'Expanded workbook')
+        assert adapter.catalog == original and state == state_before
+    print(json.dumps({'synthetic_xlsx_roundtrip': True, 'split_and_dedup': True,
+                      'existing_conflicts_preserved': True, 'blank_clear_locale_override_repeat': True,
+                      'source_map_type_token_errors_rejected': True, 'multiple_errors_have_rows': True,
+                      'xml_and_zip_guards': True, 'no_partial_candidate_or_overwrite': True,
+                      'game_compilation_or_glyph_tests': False}, indent=2))
 
 
 if __name__ == '__main__':

@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "adapter": "synthetic-single-call-v1",
+  "occurrences": [
+    {"id": "demo/room-a:T00000", "source": "Welcome, {player}.", "mode": "single"},
+    {"id": "demo/room-b:T00003", "source": "Welcome, {player}.", "mode": "single"},
+    {"id": "demo/room-a:T00002", "source": "The lamp is on.\nThe desk is empty.", "mode": "single"},
+    {"id": "demo/menu:T00007", "source": "=This is literal text.", "mode": "single"}
+  ]
+}
