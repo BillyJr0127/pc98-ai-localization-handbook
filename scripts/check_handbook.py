@@ -10,7 +10,7 @@ from pathlib import Path
 from build_handbook import ROOT, render
 
 FILES = {
-    '.gitignore', '.gitattributes', 'LICENSE', 'README.md', 'AI-HANDBOOK.md', 'AI-GUIDE.md',
+    '.gitignore', '.gitattributes', 'LICENSE', 'README.md', 'AGENTS.md', 'AI-HANDBOOK.md', 'AI-GUIDE.md',
     'WORKFLOW.md', 'AUDIO.md', 'VALIDATION.md', 'LESSONS.md', 'FOLLOW-UP.md', 'RIGHTS.md', 'SOURCES.md', 'CHANGELOG.md',
     'templates/PROJECT.json', 'templates/AUDIO-PROFILE.json', 'templates/STATUS.md',
     'templates/ISSUE.json', 'templates/RELEASE.json', 'examples/text.json', 'examples/audio.json', 'examples/binary.json',

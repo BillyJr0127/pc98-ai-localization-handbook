@@ -2,6 +2,7 @@
   "schema_version": 1,
   "project_id": "fill-in",
   "goal": {"language": "zh-Hant", "runtime_target": "unknown", "preserve_original_behavior": true},
+  "porting_constraints": {"remake_forbidden": true, "preserve_original_engine": true, "minimum_necessary_changes": true, "deliverable_order": ["run_original_in_ibm_dos", "game_text_exporter", "game_text_importer"]},
   "rights": {"source": "unknown", "allowed_local_work": "unknown", "public_release_authorized": false, "notes": []},
   "inputs": [],
   "inventory_schema": {"source_id": "string", "bytes": "integer", "sha256": "hex", "container": "unknown", "evidence": []},

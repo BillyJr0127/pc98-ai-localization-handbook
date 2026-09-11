@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-CHAPTERS = ['AI-GUIDE.md', 'WORKFLOW.md', 'FAST-PORT.md', 'TEXT-ROUNDTRIP.md', 'AUDIO.md', 'VALIDATION.md', 'LESSONS.md', 'FOLLOW-UP.md', 'RIGHTS.md', 'SOURCES.md', 'CHANGELOG.md']
+CHAPTERS = ['AGENTS.md', 'AI-GUIDE.md', 'WORKFLOW.md', 'FAST-PORT.md', 'TEXT-ROUNDTRIP.md', 'AUDIO.md', 'VALIDATION.md', 'LESSONS.md', 'FOLLOW-UP.md', 'RIGHTS.md', 'SOURCES.md', 'CHANGELOG.md']
 INCLUDES = ['templates/PROJECT.json', 'templates/AUDIO-PROFILE.json', 'templates/STATUS.md',
             'templates/ISSUE.json', 'templates/RELEASE.json', 'examples/text.json', 'examples/audio.json', 'examples/binary.json',
             'scripts/inspect_inputs.py', 'scripts/check_examples.py', 'scripts/check_binary_examples.py',
@@ -14,7 +14,9 @@ INCLUDES = ['templates/PROJECT.json', 'templates/AUDIO-PROFILE.json', 'templates
 
 def render():
     content = ['# 給 AI 的 PC-98 中文化與音訊研究手冊：單檔版\n\n'
-               '版本 1.2 · 2026-09-10。由分章文件產生。先讀 AI 工作指引，再依使用者目標開始；'
+               '版本 1.2.1 · 2026-09-10。由分章文件產生。所有 AI 先遵守：**禁止重製；'
+               '1. 盡速讓 DOS 下執行；2. 做出導出工具；3. 做出導入工具。** 保留原引擎，最少修改。'
+               '先讀 AGENTS 與 AI 工作指引，再依使用者目標開始；'
                '不要假設任何 FDI 都能自動轉換。只分析使用者實際提供且可用的資料。'
                '本檔包含全部章節、模板、自製範例、入門腳本與人工 Excel 往返工具。\n\n'
                '使用者請提供：輸入路徑、來源與使用範圍、目標平台、目標語言、希望保留的音源模式。'
