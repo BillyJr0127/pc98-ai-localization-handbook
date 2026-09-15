@@ -1,6 +1,6 @@
 # 給 AI 的 PC-98 中文化與音訊研究手冊
 
-版本 1.2.1 · 2026-09-10 · 繁體中文
+版本 1.2.2 · 2026-09-14 · 繁體中文
 
 **所有 AI 必須遵守：禁止以重製方式移植，保留原引擎，用最快速度、最少必要修改，依序完成三項核心。**
 
@@ -10,11 +10,13 @@
 
 先讀 [AGENTS.md](AGENTS.md)。不要先重寫引擎、全面翻譯、製作通用框架或等待全路線驗收。能執行後就接著做兩個工具；人工範例與文件不能代替該遊戲的實際工具。
 
-[下載教材 ZIP／AI 單檔版](https://github.com/BillyJr0127/pc98-ai-localization-handbook/releases/latest)
+[閱讀最新版 AI 單檔版](AI-HANDBOOK.md) · [下載目前原始教材 ZIP](https://github.com/BillyJr0127/pc98-ai-localization-handbook/archive/refs/heads/main.zip) · [歷次發布附件（版本可能較舊）](https://github.com/BillyJr0127/pc98-ai-localization-handbook/releases)
 
 這份手冊把前兩次 PC-98 → IBM DOS 繁體中文移植，以及第三個尚在開發中的案例，整理成可交接給其他 AI 的工作指引。包含研究方法、失敗經驗、聲音驗證及翻譯工具設計；它不是特定商業遊戲的修補包，也不是任意 FDI 的一鍵轉換器。
 
 1.2 新增[先跑穩原日文版](FAST-PORT.md)與[台詞 Excel 往返](TEXT-ROUNDTRIP.md)：提早展示真實操作、最小硬體轉接、增量建置、字庫容量與空白字形教訓，並附可執行的人工 Excel 匯出／匯入範例與明確的引擎適配介面。完整改動見 [CHANGELOG.md](CHANGELOG.md)。
+
+1.2.2 補上後續個案的[交接、速度驗證與成本控制教訓](LESSONS.md)，並同步到 AI 必讀規則及交接表：帶上使用者實際啟動習慣、用外部時間核對即時速度、每輪交付一個具體成果、重用有效證據，以及要求暫停後停止追加工作。
 
 **使用方式：把 [AI-HANDBOOK.md](AI-HANDBOOK.md) 交給你的 AI，再貼上下面的起始指令。** 單檔版包含所有章節；如果 AI 能讀整個資料夾，也可以先讀 [AI-GUIDE.md](AI-GUIDE.md)。其他 AI 不需要看過我們原本的對話。
 
